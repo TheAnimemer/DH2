@@ -18462,6 +18462,17 @@ export const Pokedex: import('../sim/dex-species').SpeciesDataTable = {
 		evoLevel: 52,
 		eggGroups: ["Amorphous"],
 	},
+	chaynzor: {
+		num: 1027,
+		name: "chaynzor",
+		types: ["steel", "normal"],
+		baseStats: {hp: 91, atk: 130, def: 110, spa: 80, spd: 65, spe: 45},
+		abilities: {0: "Iron Barbs", 1: "Mold Breaker"},
+		heightm: 2,
+		weightkg: 120,
+		color: "Gray",
+		eggGroups: ["Undiscovered"],
+	},
 	missingno: {
 		num: 0,
 		name: "MissingNo.",
