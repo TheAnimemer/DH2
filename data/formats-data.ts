@@ -5678,6 +5678,11 @@ export const FormatsData: import('../sim/dex-species').SpeciesFormatsDataTable =
 		doublesTier: "DOU",
 		natDexTier: "OU",
 	},
+	fleaclipse: {
+		tier: "OU",
+		doublesTier: "DOU",
+		natDexTier: "OU",
+	},
 	satyralpa: {
 		tier: "OU",
 		doublesTier: "DOU",

@@ -4358,7 +4358,7 @@ export const Pokedex: import('../sim/dex-species').SpeciesDataTable = {
 		weightkg: 35,
 		color: "Red",
 		evos: ["Magcargo"],
-		eggGroups: ["Amorphous"],
+		eggGroups: ["Dragon"],
 	},
 	magcargo: {
 		num: 219,
@@ -4372,7 +4372,7 @@ export const Pokedex: import('../sim/dex-species').SpeciesDataTable = {
 		prevo: "Slugma",
 		evos: ["Obsidislug"],
 		evoLevel: 38,
-		eggGroups: ["Amorphous"],
+		eggGroups: ["Dragon"],
 	},
 	swinub: {
 		num: 220,
@@ -18461,7 +18461,7 @@ export const Pokedex: import('../sim/dex-species').SpeciesDataTable = {
 		color: "Red",
 		prevo: "Magcargo",
 		evoLevel: 52,
-		eggGroups: ["Amorphous"],
+		eggGroups: ["Dragon"],
 	},
 	chaynzor: {
 		num: 1027,
@@ -18485,8 +18485,19 @@ export const Pokedex: import('../sim/dex-species').SpeciesDataTable = {
 		color: "Gray",
 		eggGroups: ["Undiscovered"],
 	},
-	satyralpa: {
+	fleaclipse: {
 		num: 1029,
+		name: "Fleaclipse",
+		types: ["bug", "dark"],
+		baseStats: {hp: 75, atk: 115, def: 90, spa: 125, spd: 70, spe: 115},
+		abilities: {0: "Technician", 1: "Moxie"},
+		heightm: 1,
+		weightkg: 60,
+		color: "Gray",
+		eggGroups: ["Field"],
+	},
+	satyralpa: {
+		num: 1030,
 		name: "Satyralpa",
 		types: ["grass", "fighting"],
 		baseStats: {hp: 100, atk: 100, def: 120, spa: 94, spd: 65, spe: 76},
