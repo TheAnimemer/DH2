@@ -18507,6 +18507,17 @@ export const Pokedex: import('../sim/dex-species').SpeciesDataTable = {
 		color: "Green",
 		eggGroups: ["Field"],
 	},
+	dodogama: {
+		num: 1031,
+		name: "Dodogama",
+		types: ["fire", "ground"],
+		baseStats: {hp: 116, atk: 75, def: 77, spa: 75, spd: 92, spe: 55},
+		abilities: {0: "Unaware", 1: "Earth Eater"},
+		heightm: 3,
+		weightkg: 455,
+		color: "Gray",
+		eggGroups: ["Dragon"],
+	},
 	missingno: {
 		num: 0,
 		name: "MissingNo.",
