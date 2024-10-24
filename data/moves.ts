@@ -16257,7 +16257,7 @@ export const Moves: import('../sim/dex-moves').MoveDataTable = {
 			volatileStatus: 'saltcure',
 		},
 		target: "normal",
-		type: "Rock",
+		type: "Fire",
 	},
 	sandattack: {
 		num: 28,
