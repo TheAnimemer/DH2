@@ -18518,6 +18518,17 @@ export const Pokedex: import('../sim/dex-species').SpeciesDataTable = {
 		color: "Gray",
 		eggGroups: ["Dragon"],
 	},
+	lizendro: {
+		num: 1031,
+		name: "Lizendro",
+		types: ["grass", "dragon"],
+		baseStats: {hp: 100, atk: 120, def: 90, spa: 90, spd: 120, spe: 80},
+		abilities: {0: "Pressure", 1: "Serene Grace", H: "Magic Guard",},
+		heightm: 3,
+		weightkg: 50,
+		color: "Green",
+		eggGroups: ["Dragon"],
+	},
 	missingno: {
 		num: 0,
 		name: "MissingNo.",
