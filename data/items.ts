@@ -7721,9 +7721,8 @@ export const Items: import('../sim/dex-items').ItemDataTable = {
 				source.addVolatile('gem');
 			}
 		},
-		num: 558,
-		gen: 5,
-		isNonstandard: "Past",
+		num: 808,
+		gen: 9,
 	},
 
 	// CAP items
