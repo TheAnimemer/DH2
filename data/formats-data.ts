@@ -5663,6 +5663,9 @@ export const FormatsData: import('../sim/dex-species').SpeciesFormatsDataTable =
 		doublesTier: "(DUU)",
 		natDexTier: "RUBL",
 	},
+
+	// AniCAP Tiers
+
 	obsidislug: {
 		tier: "OU",
 		doublesTier: "DOU",

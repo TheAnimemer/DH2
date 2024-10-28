@@ -7710,6 +7710,22 @@ export const Items: import('../sim/dex-items').ItemDataTable = {
 		rating: 1,
 	},
 
+	// AniCAP Items
+
+	powersash: {
+		name: "Power Sash",
+		spritenum: 151,
+		onSourceTryPrimaryHit(target, source, move) {
+			if (target === source || move.category === 'Status') return;
+			if (move.type === 'Bug' && source.useItem()) {
+				source.addVolatile('gem');
+			}
+		},
+		num: 558,
+		gen: 5,
+		isNonstandard: "Past",
+	},
+
 	// CAP items
 
 	crucibellite: {

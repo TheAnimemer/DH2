@@ -18450,6 +18450,9 @@ export const Pokedex: import('../sim/dex-species').SpeciesDataTable = {
 		tags: ["Mythical"],
 		eggGroups: ["Undiscovered"],
 	},
+
+	// AniCAP Dex
+
 	obsidislug: {
 		num: 1026,
 		name: "Obsidislug",
@@ -18528,6 +18531,9 @@ export const Pokedex: import('../sim/dex-species').SpeciesDataTable = {
 		weightkg: 50,
 		color: "Green",
 		eggGroups: ["Dragon"],
+
+	// CAP and Extras
+
 	},
 	missingno: {
 		num: 0,
