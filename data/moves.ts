@@ -22100,4 +22100,20 @@ export const Moves: import('../sim/dex-moves').MoveDataTable = {
 		target: "normal",
 		type: "Fire",
 	},
+	froststomp: {
+		num: 921,
+		accuracy: 100,
+		basePower: 80,
+		category: "Physical",
+		name: "Frost Stomp",
+		pp: 10,
+		priority: 0,
+		flags: {protect: 1, mirror: 1, metronome: 1},
+		secondary: {
+			chance: 10,
+			status: 'frz',
+		},
+		target: "normal",
+		type: "Ice",
+	},
 };

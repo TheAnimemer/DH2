@@ -18531,10 +18531,21 @@ export const Pokedex: import('../sim/dex-species').SpeciesDataTable = {
 		weightkg: 50,
 		color: "Green",
 		eggGroups: ["Dragon"],
-
+	},
+	gammoth: {
+		num: 1032,
+		name: "Gammoth",
+		types: ["Ice", "Ground"],
+		baseStats: {hp: 134, atk: 100, def: 108, spa: 62, spd: 102, spe: 49},
+		abilities: {0: "Snow Warning"},
+		heightm: 4,
+		weightkg: 500,
+		color: "Brown",
+		eggGroups: ["Field"],
+	},
+	
 	// CAP and Extras
 
-	},
 	missingno: {
 		num: 0,
 		name: "MissingNo.",

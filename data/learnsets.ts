@@ -93938,6 +93938,70 @@ export const Learnsets: import('../sim/dex-species').LearnsetDataTable = {
 			sleeptalk: ["9M"],
 		},
 	},
+	gammoth: {
+		learnset: {
+			earthquake: ["9M"],
+			froststomp: ["9M"],
+			iciclecrash: ["9M"],
+			avalanche: ["9M"],
+			icespinner: ["9M"],
+			stompingtantrum: ["9M"],
+			zenheadbutt: ["9M"],
+			ironhead: ["9M"],
+			reflect: ["9M"],
+			counter: ["9M"],
+			woodhammer: ["9M"],
+			taunt: ["9M"],
+			encore: ["9M"],
+			curse: ["9M"],
+			stoneedge: ["9M"],
+			bulldoze: ["9M"],
+			iceshard: ["9M"],
+			heavyslam: ["9M"],
+			stealthrock: ["9M"],
+			blizzard: ["9M"],
+			tackle: ["9M"],
+			thrash: ["9M"],
+			takedown: ["9M"],
+			flail: ["9M"],
+			icywind: ["9M"],
+			mudslap: ["9M"],
+			doublehit: ["9M"],
+			icebeam: ["9M"],
+			earthpower: ["9M"],
+			scaryface: ["9M"],
+			defensecurl: ["9M"],
+			rollout: ["9M"],
+			hornattack: ["9M"],
+			thunder: ["9M"],
+			facade: ["9M"],
+			protect: ["9M"],
+			substitute: ["9M"],
+			round: ["9M"],
+			endure: ["9M"],
+			toxic: ["9M"],
+			rest: ["9M"],
+			sleeptalk: ["9M"],
+		},
+	},
+	udjtrrtrsjvif: {
+		learnset: {
+			tackle: ["9M"],
+		},
+	},
+	blahblah: {
+		learnset: {
+			tackle: ["9M"],
+		},
+	},
+	placeholder: {
+		learnset: {
+			tackle: ["9M"],
+		},
+	},
+
+	// Caps
+
 	syclar: {
 		learnset: {
 			absorb: ["9L1", "8L1", "7L1"],
