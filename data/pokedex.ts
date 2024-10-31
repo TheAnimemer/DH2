@@ -18554,6 +18554,17 @@ export const Pokedex: import('../sim/dex-species').SpeciesDataTable = {
 		color: "Blue",
 		eggGroups: ["Field"],
 	},
+	scallywatt: {
+		num: 1034,
+		name: "Scallywatt",
+		types: ["Water", "Electric"],
+		baseStats: {hp: 80, atk: 80, def: 105, spa: 90, spd: 110, spe: 65},
+		abilities: {0: "Swift Swim", 1: "Mega Launcher", H: "Iron Shooter"},
+		heightm: 1.5,
+		weightkg: 75,
+		color: "Blue",
+		eggGroups: ["Water 1"],
+	},
 
 	// CAP and Extras
 

@@ -5651,4 +5651,19 @@ export const Abilities: import('../sim/dex-abilities').AbilityDataTable = {
 		rating: 3,
 		num: -4,
 	},
+
+	// AniCAP Abilities
+
+	ironshooter: {
+		onBasePowerPriority: 19,
+		onBasePower(basePower, attacker, defender, move) {
+			if (move.flags['bullet']) {
+				return this.chainModify(1.3);
+			}
+		},
+		flags: {},
+		name: "Iron Shooter",
+		rating: 3,
+		num: 2000,
+	},
 };
