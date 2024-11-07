@@ -18576,6 +18576,17 @@ export const Pokedex: import('../sim/dex-species').SpeciesDataTable = {
 		color: "Gray",
 		eggGroups: ["Field"],
 	},
+	enerwraith: {
+		num: 1036,
+		name: "Enerwraith",
+		types: ["Ghost", "Electric"],
+		baseStats: {hp: 75, atk: 105, def: 80, spa: 95, spd: 80, spe: 110},
+		abilities: {0: "Emergency Exit"},
+		heightm: 1,
+		weightkg: 60,
+		color: "Yellow",
+		eggGroups: ["Field"],
+	},
 
 	// CAP and Extras
 
