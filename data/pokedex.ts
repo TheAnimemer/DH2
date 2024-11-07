@@ -18565,6 +18565,17 @@ export const Pokedex: import('../sim/dex-species').SpeciesDataTable = {
 		color: "Blue",
 		eggGroups: ["Water 1"],
 	},
+	levireap: {
+		num: 1035,
+		name: "Levireap",
+		types: ["Ghost", "Flying"],
+		baseStats: {hp: 80, atk: 60, def: 65, spa: 105, spd: 65, spe: 125},
+		abilities: {0: "Sheer Force", 1: "Magic Guard", H: "Unburden"},
+		heightm: 0.1,
+		weightkg: 0.3,
+		color: "Gray",
+		eggGroups: ["Field"],
+	},
 
 	// CAP and Extras
 

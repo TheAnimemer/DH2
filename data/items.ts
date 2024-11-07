@@ -7724,6 +7724,18 @@ export const Items: import('../sim/dex-items').ItemDataTable = {
 		num: 808,
 		gen: 9,
 	},
+	radioantenna: {
+		name: "Radio Antenna",
+		spritenum: 305,
+		onSourceTryPrimaryHit(target, source, move) {
+			if (target === source || move.category === 'Status') return;
+			if (move.type === 'Bug' && source.useItem()) {
+				source.addVolatile('gem');
+			}
+		},
+		num: 809,
+		gen: 9,
+	},
 
 	// CAP items
 
