@@ -93563,6 +93563,9 @@ export const Learnsets: import('../sim/dex-species').LearnsetDataTable = {
 		],
 		eventOnly: true,
 	},
+
+	// AniCAP Learnsets
+
 	obsidislug: {
 		learnset: {
 			afteryou: ["7T", "6T", "5T"],
