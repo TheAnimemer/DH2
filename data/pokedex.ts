@@ -18598,6 +18598,17 @@ export const Pokedex: import('../sim/dex-species').SpeciesDataTable = {
 		color: "Green",
 		eggGroups: ["Bug"],
 	},
+	impharie: {
+		num: 1038,
+		name: "Impharie",
+		types: ["Fairy", "Fire"],
+		baseStats: {hp: 75, atk: 90, def: 80, spa: 115, spd: 90, spe: 95},
+		abilities: {0: "Dazzling", 1: "Flame Body"},
+		heightm: 1,
+		weightkg: 10,
+		color: "Red",
+		eggGroups: ["Field"],
+	},
 
 	// CAP and Extras
 
