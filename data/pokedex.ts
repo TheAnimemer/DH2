@@ -18451,7 +18451,7 @@ export const Pokedex: import('../sim/dex-species').SpeciesDataTable = {
 		eggGroups: ["Undiscovered"],
 	},
 
-	// AniCAP Dex
+	// AniCAP PokeDex
 
 	obsidislug: {
 		num: 1026,
@@ -18586,6 +18586,17 @@ export const Pokedex: import('../sim/dex-species').SpeciesDataTable = {
 		weightkg: 60,
 		color: "Yellow",
 		eggGroups: ["Field"],
+	},
+	infestalk: {
+		num: 1037,
+		name: "Infestalk",
+		types: ["Bug", "Grass"],
+		baseStats: {hp: 99, atk: 85, def: 130, spa: 50, spd: 101, spe: 65},
+		abilities: {0: "Harvest", 1: "Regenerator"},
+		heightm: 0.5,
+		weightkg: 2,
+		color: "Green",
+		eggGroups: ["Bug"],
 	},
 
 	// CAP and Extras
