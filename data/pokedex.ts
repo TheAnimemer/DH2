@@ -18609,6 +18609,17 @@ export const Pokedex: import('../sim/dex-species').SpeciesDataTable = {
 		color: "Red",
 		eggGroups: ["Field"],
 	},
+	assdos: {
+		num: 1039,
+		name: "Assdos",
+		types: ["Electric", "Flying"],
+		baseStats: {hp: 100, atk: 100, def: 85, spa: 70, spd: 85, spe: 130},
+		abilities: {0: "Static", 1: "Motor Drive"},
+		heightm: 0.7,
+		weightkg: 2,
+		color: "Yellow",
+		eggGroups: ["Field"],
+	},
 
 	// CAP and Extras
 
