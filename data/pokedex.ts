@@ -10506,6 +10506,7 @@ export const Pokedex: import('../sim/dex-species').SpeciesDataTable = {
 		heightm: 0.4,
 		weightkg: 5,
 		color: "White",
+		evos: ["Assdos"],
 		eggGroups: ["Field"],
 	},
 	karrablast: {
@@ -18461,7 +18462,7 @@ export const Pokedex: import('../sim/dex-species').SpeciesDataTable = {
 		abilities: {0: "Magma Armor", 1: "Flame Body"},
 		heightm: 1.1,
 		weightkg: 345,
-		color: "Red",
+		color: "Black",
 		prevo: "Magcargo",
 		evoLevel: 52,
 		eggGroups: ["Dragon"],
@@ -18469,7 +18470,7 @@ export const Pokedex: import('../sim/dex-species').SpeciesDataTable = {
 	chaynzor: {
 		num: 1027,
 		name: "Chaynzor",
-		types: ["steel", "normal"],
+		types: ["Steel", "Normal"],
 		baseStats: {hp: 91, atk: 130, def: 110, spa: 80, spd: 65, spe: 45},
 		abilities: {0: "Iron Barbs", 1: "Mold Breaker"},
 		heightm: 2,
@@ -18480,7 +18481,7 @@ export const Pokedex: import('../sim/dex-species').SpeciesDataTable = {
 	cormatose: {
 		num: 1028,
 		name: "Cormatose",
-		types: ["ground", "fairy"],
+		types: ["Ground", "Fairy"],
 		baseStats: {hp: 105, atk: 85, def: 85, spa: 85, spd: 85, spe: 85},
 		abilities: {0: "Pixelate", 1: "Magic Guard"},
 		heightm: 3.5,
@@ -18491,7 +18492,7 @@ export const Pokedex: import('../sim/dex-species').SpeciesDataTable = {
 	fleaclipse: {
 		num: 1029,
 		name: "Fleaclipse",
-		types: ["bug", "dark"],
+		types: ["Bug", "Dark"],
 		baseStats: {hp: 75, atk: 115, def: 90, spa: 125, spd: 70, spe: 115},
 		abilities: {0: "Technician", 1: "Moxie"},
 		heightm: 1,
@@ -18502,7 +18503,7 @@ export const Pokedex: import('../sim/dex-species').SpeciesDataTable = {
 	satyralpa: {
 		num: 1030,
 		name: "Satyralpa",
-		types: ["grass", "fighting"],
+		types: ["Grass", "Fighting"],
 		baseStats: {hp: 100, atk: 100, def: 120, spa: 94, spd: 65, spe: 76},
 		abilities: {0: "Gorilla Tactics", 1: "Adaptability"},
 		heightm: 2.4,
@@ -18513,7 +18514,7 @@ export const Pokedex: import('../sim/dex-species').SpeciesDataTable = {
 	dodogama: {
 		num: 1031,
 		name: "Dodogama",
-		types: ["fire", "ground"],
+		types: ["Fire", "Ground"],
 		baseStats: {hp: 116, atk: 75, def: 77, spa: 75, spd: 92, spe: 55},
 		abilities: {0: "Unaware", 1: "Earth Eater"},
 		heightm: 3,
@@ -18524,7 +18525,7 @@ export const Pokedex: import('../sim/dex-species').SpeciesDataTable = {
 	lizendro: {
 		num: 1031,
 		name: "Lizendro",
-		types: ["grass", "dragon"],
+		types: ["Grass", "Dragon"],
 		baseStats: {hp: 100, atk: 120, def: 90, spa: 90, spd: 120, spe: 80},
 		abilities: {0: "Pressure", 1: "Serene Grace", H: "Magic Guard",},
 		heightm: 3,
@@ -18618,7 +18619,23 @@ export const Pokedex: import('../sim/dex-species').SpeciesDataTable = {
 		heightm: 0.7,
 		weightkg: 2,
 		color: "Yellow",
+		prevo: "Emolga",
+		evoLevel: 32,
 		eggGroups: ["Field"],
+	},
+	placeholder: {
+		num: 1040,
+		name: "",
+		types: ["", ""],
+		baseStats: {hp: 60, atk: 50, def: 120, spa: 90, spd: 80, spe: 30},
+		abilities: {0: "", 1: "", H: ""},
+		heightm: 0.8,
+		weightkg: 55,
+		color: "",
+		prevo: "",
+		evos: [""],
+		evoLevel: 1,
+		eggGroups: [""],
 	},
 
 	// CAP and Extras
