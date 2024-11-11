@@ -22116,4 +22116,20 @@ export const Moves: import('../sim/dex-moves').MoveDataTable = {
 		target: "normal",
 		type: "Ice",
 	},
+	electricpiercer: {
+		num: 922,
+		accuracy: 80,
+		basePower: 100,
+		category: "Physical",
+		name: "Flying Press",
+		pp: 10,
+		flags: {contact: 1, protect: 1, mirror: 1, gravity: 1, distance: 1, nonsky: 1, metronome: 1},
+		onEffectiveness(typeMod, target, type, move) {
+			return typeMod + this.dex.getEffectiveness('Bug', type);
+		},
+		priority: 0,
+		secondary: null,
+		target: "any",
+		type: "Electric",
+	},
 };

@@ -18623,8 +18623,19 @@ export const Pokedex: import('../sim/dex-species').SpeciesDataTable = {
 		evoLevel: 32,
 		eggGroups: ["Field"],
 	},
-	placeholder: {
+	lightenna: {
 		num: 1040,
+		name: "Lightenna",
+		types: ["Bug", "Electric"],
+		baseStats: {hp: 70, atk: 115, def: 55, spa: 115, spd: 55, spe: 115},
+		abilities: {0: "Electric Surge"},
+		heightm: 1.5,
+		weightkg: 85,
+		color: "Yellow",
+		eggGroups: ["Field"],
+	},
+	placeholder: {
+		num: 1041,
 		name: "",
 		types: ["", ""],
 		baseStats: {hp: 60, atk: 50, def: 120, spa: 90, spd: 80, spe: 30},
