@@ -18634,8 +18634,19 @@ export const Pokedex: import('../sim/dex-species').SpeciesDataTable = {
 		color: "Yellow",
 		eggGroups: ["Field"],
 	},
-	placeholder: {
+	arsenatch: {
 		num: 1041,
+		name: "Arsenatch",
+		types: ["Dark", "Fighting"],
+		baseStats: {hp: 70, atk: 113, def: 80, spa: 90, spd: 80, spe: 118},
+		abilities: {0: "Pickpocket", 1: "Infiltrator"},
+		heightm: 0.8,
+		weightkg: 55,
+		color: "Black",
+		eggGroups: ["Human-Like"],
+	},
+	placeholder: {
+		num: 1042,
 		name: "",
 		types: ["", ""],
 		baseStats: {hp: 60, atk: 50, def: 120, spa: 90, spd: 80, spe: 30},
