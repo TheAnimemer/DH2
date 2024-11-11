@@ -2425,4 +2425,17 @@ export const ItemsText: {[id: IDEntry]: ItemText} = {
 		name: "Vile Vial",
 		shortDesc: "If held by a Venomicon, its Poison- and Flying-type attacks have 1.2x power.",
 	},
+
+	// AniCAP Item Descriptions
+
+	powersash: {
+		name: "Power Sash",
+		shortDesc: "Holder's first successful STAB attack will have 2x power. Single use.",
+	},
+	radioantenna: {
+		name: "Radio Antenna",
+		shortDesc: "If the user hits an opposing Pokemon with a contact move, the opponent has their item disabled until switch-out.",
+
+		damage: "  [POKEMON] had their item disabled!",
+	},
 };

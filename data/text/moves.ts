@@ -7546,4 +7546,25 @@ export const MovesText: {[id: IDEntry]: MoveText} = {
 			shortDesc: "Nearly always goes first. Always crits.",
 		},
 	},
+
+	// AniCAP Move Descriptions
+
+	blastpuke: {
+		name: "Blast Puke",
+		desc: "Causes damage to the target equal to 1/8 of its maximum HP rounded down, at the end of each turn during effect. This effect ends when the target is no longer active.",
+		shortDesc: "Deals 1/8 max HP each turn.",
+
+		start: "  [POKEMON] is getting scorched!",
+		damage: "  [POKEMON] is hurt by the Blast Puke!",
+	},
+	froststomp: {
+		name: "Frost Stomp",
+		desc: "Has a 10% chance to freeze the target.",
+		shortDesc: "10% chance to freeze the target.",
+	},
+	electricpiercer: {
+		name: "Electric Piercer",
+		desc: "This move combines Bug in its type effectiveness against the target.",
+		shortDesc: "Combines Bug in its type effectiveness.",
+	},
 };

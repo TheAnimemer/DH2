@@ -3767,4 +3767,58 @@ export const PokedexText: {[id: IDEntry]: PokedexText} = {
 	pokestarufopropu2: {
 		name: "Pokestar UFO-PropU2",
 	},
+
+	// AniCAP Dex Descriptons
+
+	obsidislug: {
+		name: "Obsidislug",
+	},
+	chaynzor: {
+		name: "Chaynzor",
+	},
+	cormatose: {
+		name: "Cormatose",
+	},
+	fleaclipse: {
+		name: "Fleaclipse",
+	},
+	satyralpa: {
+		name: "Satyralpa",
+	},
+	dodogama: {
+		name: "Dodogama",
+	},
+	lizendro: {
+		name: "Lizendro",
+	},
+	gammoth: {
+		name: "Gammoth",
+	},
+	saruglace: {
+		name: "Saruglace",
+	},
+	scallywatt: {
+		name: "Scallywatt",
+	},
+	levireap: {
+		name: "Levireap",
+	},
+	enerwraith: {
+		name: "Enerwraith",
+	},
+	infestalk: {
+		name: "Infestalk",
+	},
+	impharie: {
+		name: "Impharie",
+	},
+	assdos: {
+		name: "Assdos",
+	},
+	lightenna: {
+		name: "Lightenna",
+	},
+	arsenatch: {
+		name: "Arsenatch",
+	},
 };
