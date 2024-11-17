@@ -18656,8 +18656,19 @@ export const Pokedex: import('../sim/dex-species').SpeciesDataTable = {
 		color: "Purple",
 		eggGroups: ["Field"],
 	},
-	placeholder: {
-		num: 1043,
+	laminight: {
+		num: 1044,
+		name: "Laminight",
+		types: ["Dark", "Poison"],
+		baseStats: {hp: 104, atk: 70, def: 110, spa: 98, spd: 103, spe: 40},
+		abilities: {0: "Oblivious", 1: "Stall"},
+		heightm: 11,
+		weightkg: 0.1,
+		color: "Black",
+		eggGroups: ["Amorphous"],
+	},
+	placehovlder: {
+		num: 1044,
 		name: "",
 		types: ["", ""],
 		baseStats: {hp: 95, atk: 90, def: 105, spa: 105, spd: 85, spe: 105},
