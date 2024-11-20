@@ -18657,7 +18657,7 @@ export const Pokedex: import('../sim/dex-species').SpeciesDataTable = {
 		eggGroups: ["Field"],
 	},
 	laminight: {
-		num: 1044,
+		num: 1043,
 		name: "Laminight",
 		types: ["Dark", "Poison"],
 		baseStats: {hp: 104, atk: 70, def: 110, spa: 98, spd: 103, spe: 40},
