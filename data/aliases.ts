@@ -2132,4 +2132,9 @@ export const Aliases: import('../sim/dex').AliasesTable = {
 	venomiconp: "Venomicon",
 	venomiconprologue: "Venomicon",
 	volk: "Volkraken",
+
+	// AniCAP Aliases
+
+	goat: "Obsidislug",
+	slug: "Obsidislug",
 };

@@ -7736,6 +7736,19 @@ export const Items: import('../sim/dex-items').ItemDataTable = {
 		num: 809,
 		gen: 9,
 	},
+	deciduite: {
+		name: "Deciduite",
+		spritenum: 620,
+		megaStone: "Decidueye-Mega",
+		megaEvolves: "Decidueye",
+		itemUser: ["Decidueye"],
+		onTakeItem(item, source) {
+			if (item.megaEvolves === source.baseSpecies.baseSpecies) return false;
+			return true;
+		},
+		num: 810,
+		gen: 9,
+	},
 
 	// CAP items
 
