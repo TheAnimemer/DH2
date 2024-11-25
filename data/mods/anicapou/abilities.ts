@@ -23,7 +23,7 @@ Ratings and how they work:
 	ex. Imposter, Shadow Tag
 */
 
-export const Abilities: {[abilityid: string]: AbilityData} = {
+export const Abilities: {[abilityid: string]: ModdedAbilityData} = {
 	ironshooter: {
 		onBasePowerPriority: 19,
 		onBasePower(basePower, attacker, defender, move) {

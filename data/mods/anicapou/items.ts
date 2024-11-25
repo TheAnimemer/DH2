@@ -1,6 +1,4 @@
-import { ItemData } from "../../../sim/dex-items";
-
-export const FormatsData: {[k: string]: ItemData} = {
+export const Items: {[k: string]: ModdedItemData} = {
     powersash: {
         name: "Power Sash",
         spritenum: 151,

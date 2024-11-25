@@ -1,4 +1,4 @@
-export const Learnsets: {[speciesid: string]: LearnsetData} = {
+export const Learnsets: {[speciesid: string]: ModdedLearnsetData} = {
 	obsidislug: {
 		learnset: {
 			afteryou: ["7T", "6T", "5T"],
