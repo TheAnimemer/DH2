@@ -18546,7 +18546,7 @@ export const Pokedex: import('../sim/dex-species').SpeciesDataTable = {
 	},
 	saruglace: {
 		num: 1033,
-		name: "saruglace",
+		name: "Saruglace",
 		types: ["Ice", "Fighting"],
 		baseStats: {hp: 97, atk: 115, def: 77, spa: 62, spd: 71, spe: 105},
 		abilities: {0: "Refrigerate", 1: "Technician"},
