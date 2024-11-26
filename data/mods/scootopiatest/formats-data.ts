@@ -63,7 +63,7 @@ export const FormatsData: {[k: string]: ModdedSpeciesFormatsData} = {
 		tier: "Scoo",
 		doublesTier: "DOU",
 	},
-	molatreme: {
+	duratreme: {
 		tier: "Scoo",
 		doublesTier: "DOU",
 	},
@@ -176,6 +176,14 @@ export const FormatsData: {[k: string]: ModdedSpeciesFormatsData} = {
 		doublesTier: "DOU",
 	},	
 	himalao: {
+		tier: "Scoo",
+		doublesTier: "DOU",
+	},
+	kasappa: {
+		tier: "Scoo",
+		doublesTier: "DOU",
+	},
+	enkappa: {
 		tier: "Scoo",
 		doublesTier: "DOU",
 	},

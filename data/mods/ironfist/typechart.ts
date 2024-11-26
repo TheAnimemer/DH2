@@ -29,6 +29,7 @@ export const TypeChart: import('../sim/dex-data').TypeDataTable = {
 	dark: {
 		damageTaken: {
 			prankster: 3,
+			graveyard: 3,
 			Bug: 1,
 			Dark: 2,
 			Dragon: 0,
@@ -218,6 +219,7 @@ export const TypeChart: import('../sim/dex-data').TypeDataTable = {
 	ghost: {
 		damageTaken: {
 			trapped: 3,
+			graveyard: 3,
 			Bug: 2,
 			Dark: 1,
 			Dragon: 0,
@@ -330,6 +332,7 @@ export const TypeChart: import('../sim/dex-data').TypeDataTable = {
 	},
 	normal: {
 		damageTaken: {
+			graveyard: 3,
 			Bug: 0,
 			Dark: 0,
 			Dragon: 0,
@@ -546,6 +549,7 @@ export const TypeChart: import('../sim/dex-data').TypeDataTable = {
 	},
 	silly: {
 		damageTaken: {
+			confusion: 3,
 			Bug: 1,
 			Dark: 2,
 			Dragon: 0,
@@ -567,6 +571,31 @@ export const TypeChart: import('../sim/dex-data').TypeDataTable = {
 			Water: 0,
 			Lemon: 0,
 			Silly: 0,
+		},
+	},
+	serious: {
+		damageTaken: {
+			Bug: 0,
+			Dark: 0,
+			Dragon: 0,
+			Electric: 0,
+			Fairy: 0,
+			Fighting: 0,
+			Fire: 0,
+			Flying: 0,
+			Ghost: 0,
+			Grass: 0,
+			Ground: 0,
+			Ice: 0,
+			Normal: 0,
+			Poison: 0,
+			Psychic: 1,
+			Rock: 0,
+			Steel: 0,
+			Stellar: 0,
+			Water: 0,
+			Lemon: 0,
+			Silly: 3,
 		},
 	},
 };

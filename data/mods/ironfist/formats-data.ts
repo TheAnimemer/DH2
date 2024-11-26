@@ -103,6 +103,7 @@ export const FormatsData: {[k: string]: ModdedSpeciesFormatsData} = {
 		tier: "IF",
 		doublesTier: "DOU",
 	},
+	
 	melmetal2: {
 		tier: "IF",
 		doublesTier: "DOU",
@@ -219,6 +220,7 @@ export const FormatsData: {[k: string]: ModdedSpeciesFormatsData} = {
 		tier: "IF",
 		doublesTier: "DOU",
 	},
+	
 	smelmetal: {
 		tier: "IF",
 		doublesTier: "DOU",
@@ -291,12 +293,13 @@ export const FormatsData: {[k: string]: ModdedSpeciesFormatsData} = {
 		tier: "IF",
 		doublesTier: "DOU",
 	},
+	
 	moltresmega: {
 		tier: "IF",
 		doublesTier: "DOU",
 	},
 	jirachitwo: {
-		tier: "Gone!",
+		tier: "UoTW",
 		doublesTier: "DOU",
 	},
 	shinxfishing: {
@@ -411,6 +414,7 @@ export const FormatsData: {[k: string]: ModdedSpeciesFormatsData} = {
 		tier: "IF",
 		doublesTier: "DOU",
 	},
+	
 	ronaldreagan: {
 		tier: "IF",
 		doublesTier: "DOU",
@@ -428,7 +432,7 @@ export const FormatsData: {[k: string]: ModdedSpeciesFormatsData} = {
 		doublesTier: "DOU",
 	},
 	sunflora: {
-		tier: "IF",
+		tier: "Gone!",
 		doublesTier: "DOU",
 	},
 	rawringmoon: {
@@ -463,4 +467,123 @@ export const FormatsData: {[k: string]: ModdedSpeciesFormatsData} = {
 		tier: "IF",
 		doublesTier: "DOU",
 	},
-}
+
+	goddease: {
+		tier: "IF",
+		doublesTier: "DOU",
+	},
+	jableye: {
+		tier: "IF",
+		doublesTier: "DOU",
+	},
+	kyrum: {
+		tier: "IF",
+		doublesTier: "DOU",
+	},
+	raccoon: {
+		tier: "IF",
+		doublesTier: "DOU",
+	},
+	lucariocalm: {
+		tier: "IF",
+		doublesTier: "DOU",
+	},
+	nedontrol: {
+		tier: "IF",
+		doublesTier: "DOU",
+	},
+	princirang: {
+		tier: "IF",
+		doublesTier: "DOU",
+	},
+	ironclown: {
+		tier: "IF",
+		doublesTier: "DOU",
+	},
+	thepearlhand: {
+		tier: "IF",
+		doublesTier: "DOU",
+	},
+	mcfish: {
+		tier: "IF",
+		doublesTier: "DOU",
+	},
+	applwirm: {
+		tier: "IF",
+		doublesTier: "DOU",
+	},
+	minunandplusled: {
+		tier: "IF",
+		doublesTier: "DOU",
+	},
+	silvallystellar: {
+		tier: "IF",
+		doublesTier: "DOU",
+	},
+	silvallysilly: {
+		tier: "IF",
+		doublesTier: "DOU",
+	},
+
+	traike: {
+		tier: "IF",
+		doublesTier: "DOU",
+	},
+	groudon: {
+		tier: "IF",
+		doublesTier: "DOU",
+	},
+	drliberty: {
+		tier: "IF",
+		doublesTier: "DOU",
+	},
+	absol: {
+		tier: "IF",
+		doublesTier: "DOU",
+	},
+	sunfloragrave: {
+		tier: "IF",
+		doublesTier: "DOU",
+	},
+	ironboulder: {
+		tier: "IF",
+		doublesTier: "DOU",
+	},
+	hydralemon: {
+		tier: "IF",
+		doublesTier: "DOU",
+	},
+	zapdos: {
+		tier: "IF",
+		doublesTier: "DOU",
+	},
+	solarbean: {
+		tier: "IF",
+		doublesTier: "DOU",
+	},
+	
+	hiveweb: {
+		tier: "IF",
+		doublesTier: "DOU",
+	},
+	syndcant: {
+		tier: "IF",
+		doublesTier: "DOU",
+	},
+	fishmarketing3: {
+		tier: "IF",
+		doublesTier: "DOU",
+	},
+	lemonganium: {
+		tier: "IF",
+		doublesTier: "DOU",
+	},
+	carnivineif: {
+		tier: "IF",
+		doublesTier: "DOU",
+	},
+	grumpig: {
+		tier: "IF",
+		doublesTier: "DOU",
+	},
+};

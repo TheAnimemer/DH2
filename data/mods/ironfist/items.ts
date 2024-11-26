@@ -4,6 +4,10 @@ export const Items: {[itemid: string]: ModdedItemData} = {
 		inherit: true,
 		rating: 0,
 	},
+	terrainextender: {
+		inherit: true,
+		shortDesc: "Holder's use of Electric/Grassy/Misty/Psychic/Fishy Terrain lasts 8 turns instead of 5.",
+	},
 	
 	//slate 1
 	kunai: {
@@ -13,7 +17,6 @@ export const Items: {[itemid: string]: ModdedItemData} = {
 		},
 		onAfterMoveSecondarySelf(source, target, move) {
 			if (source.kunai === undefined) source.kunai = 0;
-			console.log(source.kunai);
 			if (move.category !== 'Status') source.kunai ++;
 			else source.kunai = 0;
 			if (source.kunai >= 3) {
@@ -49,13 +52,13 @@ export const Items: {[itemid: string]: ModdedItemData} = {
 		onDisableMove(pokemon) {
 			for (const moveSlot of pokemon.moveSlots) {
 				const move = this.dex.moves.get(moveSlot.id);
-				if (move.type === 'Electric' || move.type === 'Grass') {
+				if (move.category !== 'Status' && (move.type === 'Electric' || move.type === 'Grass' || move.type === 'Lemon')) {
 					pokemon.disableMove(moveSlot.id);
 				}
 			}
 		},
 		num: 270,
-		shortDesc: "Traps opposing Water-types. Holder cannot use Grass or Electric-type moves.",
+		shortDesc: "Traps opposing Water-types. Holder cannot use Grass/Electric/Lemon-type attacks.",
 		gen: 4,
 		rating: 3,
 	},
@@ -98,10 +101,19 @@ export const Items: {[itemid: string]: ModdedItemData} = {
 				return null;
 			}
 		},
+		onEffectiveness(typeMod, target, type, move) {
+			if (!target) return;
+			if (target.volatiles['ingrain'] || target.volatiles['smackdown'] || this.field.getPseudoWeather('gravity')) return;
+			if (move.type === 'Ground' && target.hasType('Flying')) return 0;
+		},
+		// airborneness negation implemented in sim/pokemon.js:Pokemon#isGrounded
+		onModifySpe(spe) {
+			return this.chainModify(0.5);
+		},
 		flags: {},
 		name: "Iron Fist",
 		rating: 3,
-		shortDesc: "All punching moves turn into Double Iron Bash.",
+		shortDesc: "Iron Ball + all punching moves turn into Double Iron Bash.",
 		num: 89,
 	},
 	kinglerite: {
@@ -117,6 +129,31 @@ export const Items: {[itemid: string]: ModdedItemData} = {
 	},
 
 	//slate 2
+	boosterenergy: {
+		name: "Booster Energy",
+		spritenum: 0, // TODO
+		onUpdate(pokemon) {
+			if (pokemon.transformed) return;
+			if (this.queue.peek(true)?.choice === 'runSwitch') return;
+			if (pokemon.hasAbility('protosynthesis') && !pokemon.volatiles['protosynthesis'] && !this.field.isWeather('sunnyday') && pokemon.useItem()) {
+				pokemon.addVolatile('protosynthesis');
+			}
+			if (pokemon.hasAbility('protostasis') && !pokemon.volatiles['protostasis'] && !this.field.isWeather('snow') && pokemon.useItem()) {
+				pokemon.addVolatile('protostasis');
+			}
+			if (pokemon.hasAbility('quarkdrive') && !pokemon.volatiles['quarkdrive'] && !this.field.isTerrain('electricterrain') && pokemon.useItem()) {
+				pokemon.addVolatile('quarkdrive');
+			}
+		},
+		onTakeItem(item, source) {
+			if (source.baseSpecies.tags.includes("Paradox")) return false;
+			return true;
+		},
+		num: 1880,
+		desc: "Activates the Paradox Abilities. Single use.",
+		gen: 9,
+	},
+	
 	balanceboard: {
 		name: "Balance Board",
 		shortDesc: "If Atk/Def/SpA/SpD is raised, SpA/SpD/Atk/Def is raised. Single use.",
@@ -205,7 +242,6 @@ export const Items: {[itemid: string]: ModdedItemData} = {
 		},
 		onBeforeTurn(pokemon) {
 			if (pokemon.removeVolatile('nervecharm')) {
-				console.log("adding quickguard");
 				pokemon.side.addSideCondition('quickguard');
 			}
 			pokemon.addVolatile('nervecharm');
@@ -338,7 +374,7 @@ export const Items: {[itemid: string]: ModdedItemData} = {
 		name: "Deez NUts",
 		spritenum: 292,
 		fling: {
-			basePower: 280,
+			basePower: 200,
 			onHit(target, source, move) {
 				if (move) {
 					this.heal(target.baseMaxhp);
@@ -429,5 +465,211 @@ export const Items: {[itemid: string]: ModdedItemData} = {
 		},
 		forcedForme: "Boogerpon-CLOWNerstone",
 		itemUser: ["Boogerpon-CLOWNerstone"],
+	},
+
+	//slate 5
+	covertcloak: {
+		inherit: true,
+		shortDesc: "Holder nullifies all secondary effects of another Pokemon's attack.",
+		onTakeItem: false,
+		onModifySecondaries(secondaries) {
+			return secondaries.filter(effect => !!effect.cloak);
+		},
+		rating: 3,
+	},
+	sillymemory: {
+		name: "Silly Memory",
+		shortDesc: "Holder's Multi-Attack is Silly type.",
+		spritenum: 679,
+		onMemory: 'Silly',
+		onTakeItem(item, pokemon, source) {
+			if ((source && source.baseSpecies.num === 773) || pokemon.baseSpecies.num === 773) {
+				return false;
+			}
+			return true;
+		},
+		forcedForme: "Silvally-Silly",
+		itemUser: ["Silvally-Silly"],
+	},
+	stellariumz: {
+		name: "Stellarium Z",
+		shortDesc: "If holder has an attacking move, this item allows it to use a Stellar Z-Move.",
+		spritenum: 633,
+		onMemory: 'Stellar',
+		onTakeItem: false,
+		zMove: true,
+		zMoveType: "Stellar",
+		rating: 3,
+	},
+	bigbuttonbutton: {
+		name: "Big Button Button",
+		spritenum: 118,
+		fling: {
+			basePower: 60,
+			volatileStatus: 'bigbutton',
+		},
+		onDamagingHit(damage, target, source, move) {
+			if(!source.volatiles['bigbutton'] && source.set.teraType !== "Bug" && target.useItem()) {
+				source.addVolatile('bigbutton');
+			}
+		},
+		shortDesc: "On hit, force the opponent to use Big Button. Single use.",
+		rating: 3,
+	},
+
+	//slate 6
+	boxofonedozenstarvingcrazedweasels: {
+		name: "Box of One Dozen Starving, Crazed Weasels",
+		shortDesc: "Cannot be removed. Attackers lose 1/8 max HP per turn if they try to.",
+		rating: 3,
+		onTakeItem: false,
+		onHit(target, source, move) {
+			if (['corrosivegas', 'covet', 'knockoff', 'switcheroo', 'thief', 'trick', 'incinerate'].includes(move.id)) {
+				source.addVolatile('boxofonedozenstarvingcrazedweasels');
+				return;
+			}
+			if (target !== source && !source.item) {
+				if (source.hasAbility('pickpocket') && move.flags.contact) {
+					source.addVolatile('boxofonedozenstarvingcrazedweasels');
+					return;
+				}
+			}
+		},
+		condition: {
+			onStart(pokemon) {
+				this.add('-start', pokemon, 'Box of One Dozen Starving, Crazed Weasels');
+			},
+			onResidual(pokemon) {
+				this.damage(pokemon.baseMaxhp / 8);
+			},
+		},
+	},
+	shuriken: {
+		name: "Shuriken",
+		fling: {
+			basePower: 90,
+		},
+		onAfterMoveSecondarySelf(source, target, move) {
+			if (source.shuriken === undefined) source.shuriken = 0;
+			if (move.category !== 'Status') source.shuriken ++;
+			else source.shuriken = 0;
+			if (source.shuriken >= 3) {
+				this.boost({def: 1, spd: 1});
+				source.shuriken = 0;
+			}
+		},
+		shortDesc: "If holder uses 3 consecutive attacking moves, it gains +1 Attack and Sp. Attack.",
+		rating: 3,
+	},
+	tubeofonebillionlemons: {
+		name: "Tube of One Billion Lemons",
+		shortDesc: "Holder's Lemon-type attacks have 1.2x power.",
+		spritenum: 60,
+		rating: 3,
+		fling: {
+			basePower: 30,
+		},
+		onBasePowerPriority: 15,
+		onBasePower(basePower, user, target, move) {
+			if (move && move.type === 'Lemon') {
+				return this.chainModify([4915, 4096]);
+			}
+		},
+	},
+	comicallylargespoon: {
+		name: "Comically Large Spoon",
+		shortDesc: "Holder's Silly-type attacks have 1.2x power.",
+		spritenum: 520,
+		rating: 3,
+		fling: {
+			basePower: 80,
+		},
+		onBasePowerPriority: 15,
+		onBasePower(basePower, user, target, move) {
+			if (move && move.type === 'Silly') {
+				return this.chainModify([4915, 4096]);
+			}
+		},
+	},
+	bobscurse: {
+		name: "Bob\'s Curse",
+		shortDesc: "Holder's bullet attacks have 1.2x power and have a 30% chance to badly poison.",
+		rating: 3,
+		spritenum: 660,
+		fling: {
+			basePower: 90,
+			secondary: {
+				chance: 30,
+				status: 'psn',
+			},
+		},
+		onModifyMove(move, pokemon) {
+			if (move.flags['bullet']) {
+				this.debug('Adding Stench flinch');
+				if (!move.secondaries) move.secondaries = [];
+				for (const secondary of move.secondaries) {
+					if (secondary.status === 'tox') return;
+				}
+				move.secondaries.push({
+					chance: 30,
+					status: 'tox',
+				});
+			}
+		},
+		onBasePowerPriority: 15,
+		onBasePower(basePower, user, target, move) {
+			if (move.flags['bullet']) {
+				return this.chainModify([4915, 4096]);
+			}
+		},
+	},
+
+	//slate 7
+	nomelberry: {
+		inherit: true,
+		shortDesc: "Halves damage taken from a supereffective Lemon-type attack. Single use.",
+		onSourceModifyDamage(damage, source, target, move) {
+			if (move.type === 'Lemon' && target.getMoveHitData(move).typeMod > 0) {
+				const hitSub = target.volatiles['substitute'] && !move.flags['bypasssub'] && !(move.infiltrates && this.gen >= 6);
+				if (hitSub) return;
+
+				if (target.eatItem()) {
+					this.debug('-50% reduction');
+					this.add('-enditem', target, this.effect, '[weaken]');
+					return this.chainModify(0.5);
+				}
+			}
+		},
+		onEat() { },
+		isNonstandard: null,
+	},
+	cornnberry: {
+		inherit: true,
+		shortDesc: "Halves damage taken from a supereffective Silly-type attack. Single use.",
+		onSourceModifyDamage(damage, source, target, move) {
+			if (move.type === 'Silly' && target.getMoveHitData(move).typeMod > 0) {
+				const hitSub = target.volatiles['substitute'] && !move.flags['bypasssub'] && !(move.infiltrates && this.gen >= 6);
+				if (hitSub) return;
+
+				if (target.eatItem()) {
+					this.debug('-50% reduction');
+					this.add('-enditem', target, this.effect, '[weaken]');
+					return this.chainModify(0.5);
+				}
+			}
+		},
+		onEat() { },
+		isNonstandard: null,
+	},
+	grimrock: {
+		name: "Grim Rock",
+		shortDesc: "Holder's use of Graveyard lasts 8 turns instead of 5.",
+		spritenum: 379,
+		fling: {
+			basePower: 60,
+			onHit(target, source) {
+				this.damage(target.baseMaxhp / 8, target, source);
+			},
+		},
 	},
 }

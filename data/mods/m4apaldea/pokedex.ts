@@ -468,4 +468,73 @@ export const Pokedex: {[speciesid: string]: ModdedSpeciesData} = {
 		megaStone: "Golurkite",
 		megaCreator: "okispokis",
 	},
+
+	// slate 10
+
+	emboar: {
+		inherit: true,
+		mega: "emboarmega",
+		megaName: "Emboar-Mega",
+		megaAbility: {0: "Inner Fortitude"},
+		megaStats: {hp: 110, atk: 143, def: 80, spa: 115, spd: 115, spe: 65},
+		megaStone: "Emboarite",
+		megaCreator: "War Incarnate",
+		megaWeight: 490,
+	},
+
+	beartic: {
+		inherit: true,
+		mega: "bearticmega",
+		megaName: "Beartic-Mega",
+		megaAbility: {0: "Frost Aura"},
+		megaStats: {hp: 95, atk: 140, def: 98, spa: 70, spd: 98, spe: 104},
+		megaStone: "Beartite",
+		movepoolAdditions: ["fakeout", "icespinner", "slackoff"],
+		megaCreator: "lydian",
+		megaWeight: 350,
+	},
+
+	kleavor: {
+		inherit: true,
+		mega: "kleavormega",
+		megaName: "Kleavor-Mega",
+		megaAbility: {0: "Defiant"},
+		megaStats: {hp: 70, atk: 165, def: 120, spa: 45, spd: 95, spe: 105},
+		megaStone: "Kleavorite",
+		movepoolAdditions: ["roost"],
+		megaCreator: "Lysion",
+	},
+
+	// slate 11
+
+	slitherwing: {
+		inherit: true,
+		mega: "slitherwingmega",
+		megaName: "Slither Wing-Mega",
+		megaAbility: {0: "Swarm"},
+		megaStats: {hp: 85, atk: 155, def: 99, spa: 105, spd: 135, spe: 91},
+		megaStone: "Slitherwite",
+		megaCreator: "DrPumpkinz",
+	},
+
+	ironthorns: {
+		inherit: true,
+		mega: "ironthornsmega",
+		megaName: "Iron Thorns-Mega",
+		megaAbility: {0: "Download"},
+		megaStats: {hp: 100, atk: 144, def: 128, spa: 110, spd: 84, spe: 104},
+		megaStone: "Thornite",
+		megaCreator: "okispokis",
+	},
+
+	wochien: {
+		inherit: true,
+		mega: "wochienmega",
+		megaName: "Wo-Chien-Mega",
+		megaAbility: {0: "Grudgeful Tablets"},
+		megaStats: {hp: 85, atk: 104, def: 141, spa: 112, spd: 144, spe: 84},
+		megaStone: "Wochienite",
+		movepoolAdditions: ["strengthsap"],
+		megaCreator: "lydian",
+	},
 };

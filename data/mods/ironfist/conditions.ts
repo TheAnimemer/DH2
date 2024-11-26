@@ -56,7 +56,7 @@ export const Conditions: {[id: string]: ModdedConditionData} = {
 		},
 		onBasePower(basePower, pokemon, target, move) {
 			const boostedMoves = [
-				'astonish', 'extrasensory', 'needlearm', 'stomp', 'steamroller', 'bodyslam', 'shadowforce', 'phantomforce', 'flyingpress', 'dragonrush', 'heatcrash', 'heavyslam', 'maliciousmoonsault'
+				'astonish', 'extrasensory', 'needlearm', 'stomp', 'steamroller', 'bodyslam', 'shadowforce', 'phantomforce', 'flyingpress', 'dragonrush', 'heatcrash', 'heavyslam', 'maliciousmoonsault', 'supercellslam'
 			];
 			if (boostedMoves.includes(move.id)) {
 				return this.chainModify(2);
@@ -70,6 +70,14 @@ export const Conditions: {[id: string]: ModdedConditionData} = {
 	//slate 3
 	sunnyday: {
 		inherit: true,
+		//slate 6
+		onWeatherModifyDamage(damage, attacker, defender, move) {
+			if (defender.hasItem('utilityumbrella') || defender.hasAbility('divininghorn')) return;
+			if (move.type === 'Fire') {
+				this.debug('Sunny Day fire boost');
+				return this.chainModify(1.5);
+			}
+		},
 		onFieldStart(battle, source, effect) {
 			if (battle.terrain === 'fishingterrain') {
 				this.add('-message', 'The fishing terrain blocked out the sun!');
@@ -85,10 +93,92 @@ export const Conditions: {[id: string]: ModdedConditionData} = {
 	},
 	raindance: {
 		inherit: true,
+		//slate 6
+		onWeatherModifyDamage(damage, attacker, defender, move) {
+			if (defender.hasItem('utilityumbrella') || defender.hasAbility('divininghorn')) return;
+			if (move.type === 'Water') {
+				this.debug('Rain water boost');
+				return this.chainModify(1.5);
+			}
+		},
 		onFieldResidual() {
 			this.add('-weather', 'RainDance', '[upkeep]');
 			if (this.field.isTerrain('fishingterrain')) this.effectState.duration ++;
 			this.eachEvent('Weather');
 		},
 	},
-}
+
+	//slate 6
+	acidrain: {
+		name: 'Acid Rain',
+		effectType: 'Weather',
+		duration: 5,
+		durationCallback(source, effect) {
+			if (source?.hasItem('sourrockorsomethingidfk')) {
+				return 8;
+			}
+			return 5;
+		},
+		onFieldStart(field, source, effect) {
+			if (effect?.effectType === 'Ability') {
+				if (this.gen <= 5) this.effectState.duration = 0;
+				this.add('-weather', 'Acid Rain', '[from] ability: ' + effect.name, '[of] ' + source);
+			} else {
+				this.add('-weather', 'Acid Rain');
+			}
+		},
+		onFieldResidualOrder: 1,
+		onFieldResidual() {
+			this.add('-weather', 'Acid Rain', '[upkeep]');
+			if (this.field.isWeather('Acid Rain')) this.eachEvent('Weather');
+		},
+		onWeather(target) {
+			if(target.hasType('Lemon')) this.heal(target.baseMaxhp / 16, target, target);
+			else if(['Water', 'Steel'].includes(target.types) && !target.hasType('Bug')) this.damage(target.baseMaxhp / 16);
+		},
+		onFieldEnd() {
+			this.add('-weather', 'none');
+		},
+	},
+	graveyard: {
+		name: 'Graveyard',
+		effectType: 'Weather',
+		duration: 5,
+		durationCallback(source, effect) {
+			if (source?.hasItem('grimrock')) {
+				return 8;
+			}
+			return 5;
+		},
+		onWeatherModifyDamage(damage, attacker, defender, move) {
+			if (defender.hasItem('utilityumbrella') || defender.hasAbility('divininghorn')) return;
+			if (move.type === 'Ghost') {
+				this.debug('Graveyard ghost boost');
+				return this.chainModify(1.3);
+			}
+		},
+		onFieldStart(field, source, effect) {
+			this.add('-message', "The dead rose from their graves!");
+			if (effect?.effectType === 'Ability') {
+				if (this.gen <= 5) this.effectState.duration = 0;
+				this.add('-weather', 'Graveyard', '[from] ability: ' + effect.name, '[of] ' + source, '[silent]');
+			} else {
+				this.add('-weather', 'Graveyard', '[silent]');
+			}
+		},
+		onFieldResidualOrder: 1,
+		onFieldResidual() {
+			this.add('-message', "Zombies roam the battlefield.");
+			this.add('-weather', 'Graveyard', '[upkeep]');
+			if (this.field.isWeather('Graveyard')) this.eachEvent('Weather');
+		},
+		onWeather(target) {
+			this.add('-message', `${target.name} was attacked by the zombies!`);
+			this.damage(target.baseMaxhp / 16);
+		},
+		onFieldEnd() {
+			this.add('-weather', 'none', '[silent]');
+			this.add('-message', "The zombies vanished from Ironfistlandia... for now.");
+		},
+	},
+};
