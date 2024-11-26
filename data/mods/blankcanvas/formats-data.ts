@@ -104,4 +104,34 @@ export const FormatsData: {[k: string]: SpeciesFormatsData} = {
 	thaumaton: {
 		tier: "BC",
 	},
+	sculptera: {
+		tier: "BC",
+	},
+	lavalisk: {
+		tier: "BC",
+	},
+	martorse: {
+		tier: "BC",
+	},
+	parasike: {
+		tier: "BC",
+	},
+	massassin: {
+		tier: "BC",
+	},
+	searytch: {
+		tier: "BC",
+	},
+	jokerpent: {
+		tier: "BC",
+	},
+	socknbuskn: {
+		tier: "BC",
+	},
+	sleetshell: {
+		tier: "BC",
+	},
+	craggon: {
+		tier: "BC",
+	},
 };

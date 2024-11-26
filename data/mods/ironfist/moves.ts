@@ -42,7 +42,7 @@ export const Moves: {[moveid: string]: ModdedMoveData} = {
 	},
   	pog: {
 		accuracy: 100,
-		basePower: 40,
+		basePower: 60,
 		category: "Physical",
 		name: "POG",
 		pp: 10,
@@ -53,41 +53,44 @@ export const Moves: {[moveid: string]: ModdedMoveData} = {
 			this.add('-anim', pokemon, "G-Max Steelsurge", target);
 		},
 		onEffectiveness(typeMod, target, type) {
-		    return 1;
+		    if(target.baseSpecies.types[0] === type) return 1;
+			else return 0;
 		},
-		selfBoost: {
-			boosts: {
-				atk: 1,
-			},
-		},
-		status: 'par',
 		target: "normal",
 		type: "Steel",
-		shortDesc: "Always super-effective. Always paralyzes. Raises user's attack by one stage.",
+		shortDesc: "Always super-effective.",
 		contestType: "Beautiful",
 	},
   	velvetblade: {
 		accuracy: 100,
-		basePower: 100,
+		basePower: 90,
 		onPrepareHit(target, pokemon, move) {
 			this.attrLastMove('[still]');
 			this.add('-anim', pokemon, "Night Slash", target);
-			if (target.newlySwitched || this.queue.willMove(target)) {
-				this.debug('Payback NOT boosted');
-				return move.basePower;
-			}
-			this.debug('Payback damage boost');
-			return move.willCrit = true;
 		},
 		category: "Physical",
 		name: "Velvet Blade",
 		pp: 10,
 		priority: 0,
 		flags: {contact: 1, protect: 1, mirror: 1, metronome: 1, slicing: 1},
+		onModifyMove(move, pokemon, target) {
+            let newMoveName;
+			let activated = false;
+            for (const moveSlot of pokemon.moveSlots) {
+                const temp = this.dex.moves.get(moveSlot.id);
+                if (temp.category === 'Status') {
+                    newMoveName = temp.name;
+					activated = true;
+                    break;
+                }
+            }
+            if(activated) move.name = newMoveName;
+			else move.basePower /= 2;
+        },
 		secondary: null,
 		target: "normal",
 		type: "Dark",
-		shortDesc: "If user moved after target, always crits.",
+		shortDesc: "Disguises as the user's first Status move. Else halved power.",
 		contestType: "Tough",
 	},
   	mogoff: {
@@ -137,14 +140,14 @@ export const Moves: {[moveid: string]: ModdedMoveData} = {
 			this.add('-anim', pokemon, "Lovely Kiss", target);
 		},
 		secondary: {
-			chance: 70,
+			chance: 10,
 			boosts: {
 				spe: -1,
 			},
 		},
 		target: "normal",
 		type: "Fairy",
-		shortDesc: "Usually moves first. 70% chance to lower target's speed by 1.",
+		shortDesc: "Usually moves first. 10% chance to lower target's Speed by 1.",
 		contestType: "Cool",
 	},
   	fishingminigame: {
@@ -154,7 +157,7 @@ export const Moves: {[moveid: string]: ModdedMoveData} = {
 		name: "Fishing Minigame",
 		pp: 10,
 		priority: 0,
-		flags: {protect: 1, mirror: 1, contact: 1},
+		flags: {protect: 1, mirror: 1, contact: 1, fishing: 1,},
 		onPrepareHit(target, pokemon, move) {
 			this.attrLastMove('[still]');
 			this.add('-anim', pokemon, "Anchor Shot", target);
@@ -221,7 +224,7 @@ export const Moves: {[moveid: string]: ModdedMoveData} = {
 		shortDesc: "If user is under 50% max HP, paralyzes the opponent.",
 		pp: 10,
 		priority: 0,
-		flags: {protect: 1, mirror: 1, metronome: 1},
+		flags: {protect: 1, mirror: 1, metronome: 1, fishing: 1,},
 		onPrepareHit(target, pokemon, move) {
 			this.attrLastMove('[still]');
 			this.add('-anim', pokemon, "Snipe Shot", target);
@@ -267,6 +270,21 @@ export const Moves: {[moveid: string]: ModdedMoveData} = {
 		type: "Normal",
 		contestType: "Clever",
 	},
+	splash: {
+		inherit: true,
+		flags: {snatch: 1, fishing: 1, metronome: 1},
+		shortDesc: "Feebas: remove all tokens and gain +1 Atk/Def/SpA/SpD/Spe for each two.",
+		onTryHit(target, source, move) {
+			if(target.baseSpecies.baseSpecies === 'Feebas') {
+				const targetSide = target.side;
+				if(targetSide.fishingTokens > 0) {
+					const boosts = Math.floor(Math.min(targetSide.fishingTokens, 6) / 2);
+					target.side.removeFishingTokens(targetSide.fishingTokens);
+					this.boost({atk: boosts, def: boosts, spa: boosts, spd: boosts, spe: boosts}, target, target, move);
+				} else targetSide.addFishingTokens(1);
+			} else this.add('-nothing');
+		},
+	},
 	silcoonblast: {
 		accuracy: true,
 		basePower: 0,
@@ -298,7 +316,7 @@ export const Moves: {[moveid: string]: ModdedMoveData} = {
 		shortDesc: "Force switches target. Fails if target is not attacking.",
 		pp: 5,
 		priority: 1,
-		flags: {protect: 1, reflectable: 1, mirror: 1, metronome: 1},
+		flags: {protect: 1, reflectable: 1, mirror: 1, metronome: 1, fishing: 1,},
 		forceSwitch: true,
 		onPrepareHit(target, pokemon, move) {
 			this.attrLastMove('[still]');
@@ -307,7 +325,6 @@ export const Moves: {[moveid: string]: ModdedMoveData} = {
 		onTry(source, target) {
 			const action = this.queue.willMove(target);
 			const move = action?.choice === 'move' ? action.move : null;
-			console.log(move.category);
 			if (!move || (move.category === 'Status' && move.id !== 'mefirst') || target.volatiles['mustrecharge']) {
 				return false;
 			}
@@ -1134,38 +1151,18 @@ export const Moves: {[moveid: string]: ModdedMoveData} = {
 	},
 	heartdrain: {
 		accuracy: 100,
-		basePower: 0,
-		category: "Status",
+		basePower: 80,
+		category: "Special",
 		name: "Heart Drain",
-		shortDesc: "Non-Bug: 1/8 of target's HP is restored to user every turn.",
-		pp: 10,
+		shortDesc: "User recovers 50% of the damage dealt.",
+		pp: 15,
 		priority: 0,
-		flags: {protect: 1, mirror: 1, metronome: 1},
+		flags: {protect: 1, mirror: 1, metronome: 1, heal: 1},
 		onPrepareHit(target, pokemon, move) {
 			this.attrLastMove('[still]');
 			this.add('-anim', pokemon, "Giga Drain", target);
 		},
-		volatileStatus: 'heartdrain',
-		condition: {
-			onStart(target) {
-				this.add('-start', target, 'move: Heart Drain');
-			},
-			onResidualOrder: 8,
-			onResidual(pokemon) {
-				const target = this.getAtSlot(pokemon.volatiles['heartdrain'].sourceSlot);
-				if (!target || target.fainted || target.hp <= 0) {
-					this.debug('Nothing to leech into');
-					return;
-				}
-				const damage = this.damage(pokemon.baseMaxhp / 8, pokemon, target);
-				if (damage) {
-					this.heal(damage, target, pokemon);
-				}
-			},
-		},
-		onTryImmunity(target) {
-			return !target.hasType('Bug');
-		},
+		drain: [1, 2],
 		secondary: null,
 		target: "normal",
 		type: "Psychic",
@@ -1340,12 +1337,12 @@ export const Moves: {[moveid: string]: ModdedMoveData} = {
 		category: "Physical",
 		basePower: 100,
 		basePowerCallback(pokemon, target, move) {
-			const allies = pokemon.side.pokemon.filter(ally => !ally.fainted && ally.diamondHand);
+			const allies = pokemon.side.pokemon.filter(ally => ally != pokemon && !ally.fainted && ally.diamondHand);
 			return 100 + 10 * allies;
 		},
 		accuracy: 100,
 		pp: 10,
-		shortDesc: "+10 power for each unfainted allied Diamond Hand.",
+		shortDesc: "+10 BP per other unfainted allied Diamond Hand",
 		priority: 0,
 		flags: {protect: 1, mirror: 1, metronome: 1},
 		onPrepareHit(target, pokemon, move) {
@@ -1403,6 +1400,7 @@ export const Moves: {[moveid: string]: ModdedMoveData} = {
 	springtidestorm: {
 		inherit: true,
 		basePower: 120,
+		flags: {protect: 1, mirror: 1, wind: 1, metronome: 1, disaster: 1},
 		shortDesc: "30% chance to lower the foe(s) Attack by 1. Rain: can't miss.",
 		onModifyMove(move, pokemon, target) {
 			switch (target?.effectiveWeather()) {
@@ -1485,7 +1483,7 @@ export const Moves: {[moveid: string]: ModdedMoveData} = {
 		basePower: 0,
 		category: "Status",
 		name: "Fish Eater",
-		shortDesc: "-50% fishing tokens; 1/16 heal, +1 stockpile each.",
+		shortDesc: "-50% foe's fishing tokens; 1/16 heal, +1 stockpile each.",
 		pp: 10,
 		priority: 0,
 		flags: {metronome: 1, fishing: 1},
@@ -1493,12 +1491,13 @@ export const Moves: {[moveid: string]: ModdedMoveData} = {
 			this.attrLastMove('[still]');
 			this.add('-anim', pokemon, "Life Dew", pokemon);
 		},
-		onTry(source) {
-			return (source.side.fishingTokens && source.side.fishingTokens > 0);
+		onTry(source, target) {
+			return (target.side.fishingTokens && target.side.fishingTokens > 0);
 		},
 		onHit(target, source, move) {
-			const tokens = Math.ceil(source.side.fishingTokens / 2);
-			const success = source.side.removeFishingTokens(tokens);
+			if (!target.side.fishingTokens || target.side.fishingTokens <= 0 || source.volatiles['stockpile3']) return false;
+			const tokens = Math.ceil(target.side.fishingTokens / 2);
+			const success = target.side.removeFishingTokens(tokens);
 			if (success) {
 				for (let i = 0; i < Math.min(3, tokens); i ++) {
 					source.addVolatile('stockpile');
@@ -1508,7 +1507,7 @@ export const Moves: {[moveid: string]: ModdedMoveData} = {
 			return success;
 		},
 		secondary: null,
-		target: "self",
+		target: "normal",
 		type: "Normal",
 	},
 	fishingterrain: {
@@ -1516,7 +1515,7 @@ export const Moves: {[moveid: string]: ModdedMoveData} = {
 		basePower: 0,
 		category: "Status",
 		name: "Fishing Terrain",
-		shortDesc: "5 turns. Grounded: +Water, Fishing power, Fishing tokens are doubled.",
+		shortDesc: "5 turns. Grounded: +Fishing power, Fishing tokens +1 on fishing move.",
 		pp: 10,
 		priority: 0,
 		flags: {nonsky: 1, metronome: 1},
@@ -1533,10 +1532,12 @@ export const Moves: {[moveid: string]: ModdedMoveData} = {
 			onBasePower(basePower, attacker, defender, move) {
 				let mod = 1;
 				if (attacker.isGrounded() && !attacker.isSemiInvulnerable()) {
-					if(move.type === 'Water') mod *= 1.2;
-					if(move.flags['fishing']) mod *= 1.5;
+					if(move.flags['fishing']) mod *= 1.3;
 				}
 				return this.chainModify(mod);
+			},
+			onAfterHit(target, source, move) {
+				if (move.flags['fishing']) source.side.addFishingTokens(1);
 			},
 			onFieldStart(field, source, effect) {
 				if (effect?.effectType === 'Ability') {
@@ -1601,7 +1602,7 @@ export const Moves: {[moveid: string]: ModdedMoveData} = {
 		basePower: 80,
 		category: "Special",
 		name: "Lemon Acid",
-		shortDesc: "100% chance to lower the target’s Sp. Defense by one stage.",
+		shortDesc: "100% chance to lower the target’s Sp. Def by 1.",
 		pp: 15,
 		priority: 0,
 		flags: {protect: 1, mirror: 1},
@@ -1690,8 +1691,13 @@ export const Moves: {[moveid: string]: ModdedMoveData} = {
 			return (pokemon.gender !== 'N');
 		},
 		onHit(target) {
-			target.gender = (target.gender === 'F') ? 'M' : 'F';
-			this.add('-message', `${target.name} is now ${(target.gender === 'M') ? 'male' : 'female'}!`);
+			if (!target.trans) {
+				target.gender = (target.gender === 'F') ? 'M' : 'F';
+				target.trans = true;
+				this.add('-message', `${target.name} is now ${(target.gender === 'M') ? 'male' : 'female'}!`);
+			} else {
+				this.boost({def: 1, spd: 1}, target, target);
+			}
 		},
 		secondary: null,
 		target: "normal",
@@ -1863,7 +1869,7 @@ export const Moves: {[moveid: string]: ModdedMoveData} = {
 		basePower: 0,
 		accuracy: true,
 		pp: 10,
-		shortDesc: "User switches out. Diamond Hand: 30% heal.",
+		shortDesc: "User switches out. Incoming Diamond Hand: 30% heal.",
 		priority: -2,
 		flags: {metronome: 1},
 		onTry(source) {
@@ -1881,7 +1887,7 @@ export const Moves: {[moveid: string]: ModdedMoveData} = {
 				this.add('-sidestart', side, 'Throw Em A Mug', '[silent]');
 			},
 			onEntryHazard(pokemon) {
-				if (pokemon.diamondHand) this.heal(pokemon.maxhp * 0.3);
+				if (pokemon.baseSpecies.diamondHand) this.heal(pokemon.maxhp * 0.3);
 				pokemon.side.removeSideCondition('throwemamug');
 				this.add('-sideend', pokemon.side, 'move: Throw Em A Mug', '[of] ' + pokemon, '[silent]');
 			},
@@ -2097,7 +2103,7 @@ export const Moves: {[moveid: string]: ModdedMoveData} = {
 		secondary: null,
 		target: "self",
 	},
-	thief: {
+	/*thief: {
 		inherit: true,
 		shortDesc: "Steels the target's item.",
 		onAfterHit(target, source) {
@@ -2109,7 +2115,7 @@ export const Moves: {[moveid: string]: ModdedMoveData} = {
 			target.setItem(ironball);
 			this.add("-message", `${source.name} steeled ${target.name}'s ${item}!`);
 		}
-	},
+	},*/
 	swiftsquirt: {
 		name: "Swift Squirt",
 		type: "Lemon",
@@ -2204,6 +2210,588 @@ export const Moves: {[moveid: string]: ModdedMoveData} = {
 		},
 		secondary: null,
 		target: "normal",
+	},
+	
+	//slate 5
+	maldfist: {
+		name: "Mald Fist",
+		type: "Ghost",
+		category: "Physical",
+		accuracy: 100,
+		pp: 16,
+		noPPBoosts: true,
+		basePower: 50,
+		shortDesc: "+10 power for each PP used.",
+		priority: 0,
+		flags: {protect: 1, mirror: 1, metronome: 1, punch: 1, contact: 1},
+		basePowerCallback(pokemon, target, move) {
+			const callerMoveId = move.sourceEffect || move.id;
+			const moveSlot = callerMoveId === 'instruct' ? pokemon.getMoveData(move.id) : pokemon.getMoveData(callerMoveId);
+			return move.basePower + 10 * (move.pp - moveSlot.pp - 1);
+		},
+		onPrepareHit(target, pokemon, move) {
+			this.attrLastMove('[still]');
+			this.add('-anim', pokemon, "Rage Fist", target);
+		},
+		secondary: null,
+		target: "normal",
+	},
+	airhorn: {
+		name: "Air Horn",
+		type: "Silly",
+		category: "Special",
+		basePower: 55,
+		accuracy: 100,
+		pp: 10,
+		shortDesc: "Guaranteed crit if either Pokemon used Big Button.",
+		priority: 0,
+		flags: {protect: 1, mirror: 1, metronome: 1, sound: 1,},
+		onPrepareHit(target, pokemon, move) {
+			this.attrLastMove('[still]');
+			this.add('-anim', pokemon, "Boomburst", target);
+		},
+		onModifyMove(move, pokemon, target) {
+			if(pokemon.volatiles['bigbutton'] || target.volatiles['bigbutton']) move.willCrit = true;
+		},
+		secondary: null,
+		target: "normal",
+	},
+	balatroblast: {
+		name: "Balatro Blast",
+		type: "Silly",
+		category: "Special",
+		basePower: 40,
+		basePowerCallback(pokemon, target, move) {
+			const trumpCardUsers = pokemon.side.pokemon.filter(ally => ally.usedTrumpCard);
+			const bp = move.basePower + 20 * trumpCardUsers;
+			this.debug('BP: ' + bp);
+			return bp;
+		},
+		accuracy: 100,
+		pp: 10,
+		shortDesc: "+20 power for each ally that has used Trump Card.",
+		priority: 0,
+		flags: {protect: 1, mirror: 1, metronome: 1},
+		onPrepareHit(target, pokemon, move) {
+			this.attrLastMove('[still]');
+			this.add('-anim', pokemon, "Hyper Beam", target);
+		},
+		secondary: null,
+		target: "normal",
+	},
+	fiendfire: {
+		name: "Fiend Fire",
+		type: "Fire",
+		category: "Special",
+		basePower: 50,
+		accuracy: 100,
+		pp: 10,
+		shortDesc: "Consumes user's tokens; hits for that many tokens, max 4.",
+		priority: 0,
+		flags: {protect: 1, mirror: 1, metronome: 1},
+		onPrepareHit(target, pokemon, move) {
+			this.attrLastMove('[still]');
+			this.add('-anim', pokemon, "Magma Storm", target);
+		},
+		onModifyMove(move, pokemon, target) {
+			const pokeSide = pokemon.side;
+			if(pokeSide.fishingTokens > 0) {
+				const hits = Math.min(pokeSide.fishingTokens, 4);
+				pokeSide.removeFishingTokens(pokeSide.fishingTokens);
+				move.multihit = hits;
+			}
+		},
+		secondary: null,
+		target: "normal",
+	},
+	jurassicfeast: {
+		name: "Jurassic Feast",
+		type: "Rock",
+		category: "Physical",
+		basePower: 80,
+		accuracy: 100,
+		pp: 10,
+		shortDesc: "Always crits and burns Lemon-type or fish Pokemon.",
+		priority: 0,
+		flags: {protect: 1, mirror: 1, metronome: 1},
+		onPrepareHit(target, pokemon, move) {
+			this.attrLastMove('[still]');
+			this.add('-anim', pokemon, "Tar Shot", target);
+		},
+		onModifyMove(move, pokemon, target) {
+			if(target.hasType('Lemon') || target.baseSpecies.fish) move.willCrit = true;
+		},
+		onAfterHit(target, source, move) {
+			if (target.hasType('Lemon') || target.baseSpecies.fish) {
+				target.trySetStatus('brn');
+			}
+		},
+		secondary: null,
+		target: "normal",
+	},
+	singleironbash: {
+		name: "Single Iron Bash",
+		type: "Steel",
+		category: "Physical",
+		basePower: 111,
+		accuracy: true,
+		pp: 11,
+		noPPBoosts: true,
+		shortDesc: "11% chance to make the target flinch.",
+		priority: 0,
+		flags: {protect: 1, mirror: 1, metronome: 1, punch: 1, contact: 1},
+		onPrepareHit(target, pokemon, move) {
+			this.attrLastMove('[still]');
+			this.add('-anim', pokemon, "Double Iron Bash", target);
+		},
+		secondary: {
+			chance: 11,
+			volatileStatus: 'flinch',
+		},
+		target: "normal",
+	},
+	handofspace: {
+		name: "Hand of Space",
+		type: "Water",
+		category: "Special",
+		basePower: 100,
+		basePowerCallback(pokemon, target, move) {
+			if(target.baseSpecies.diamondHand) return move.basePower * 1.5;
+			return move.basePower;
+		},
+		accuracy: 100,
+		pp: 10,
+		shortDesc: "Deals 1.5x damage to Diamond Hand members.",
+		priority: 0,
+		flags: {protect: 1, mirror: 1, metronome: 1},
+		onPrepareHit(target, pokemon, move) {
+			this.attrLastMove('[still]');
+			this.add('-anim', pokemon, "Spacial Rend", target);
+		},
+		secondary: null,
+		target: "normal",
+	},
+	fishburn: {
+		name: "Fish Burn",
+		type: "Fire",
+		category: "Special",
+		basePower: 60,
+		accuracy: 100,
+		pp: 10,
+		shortDesc: "Removes 1 user's FT - always SE. else - removes 1 foe's FT, burns fish.",
+		priority: 0,
+		flags: {protect: 1, mirror: 1, metronome: 1, fishing: 1},
+		onPrepareHit(target, pokemon, move) {
+			this.attrLastMove('[still]');
+			this.add('-anim', pokemon, "Burn Up", target);
+		},
+		onModifyMove(move, pokemon, target) {
+			const pokemonSide = pokemon.side;
+			if (pokemonSide.removeFishingTokens(1)) move.burnedUserToken = true;
+			else {
+				target.side.removeFishingTokens(1);
+				move.burnedOppToken = true;
+			}
+		},
+		onEffectiveness(typeMod, target, type, move) {
+			if (!move.burnedUserToken) return typeMod;
+			move.burnedUserToken = false;
+		    if (target.baseSpecies.types[0] === type) return 1;
+			else return 0;
+		},
+		onAfterHit(target, source, move) {
+			if (move.burnedOppToken && target.baseSpecies.fish) {
+				move.burnedOppToken = false;
+				target.trySetStatus('brn');
+			}
+		},
+		secondary: null,
+		target: "normal",
+	},
+	enchantedboomerang: {
+		name: "Enchanted Boomerang",
+		type: "Fairy",
+		category: "Physical",
+		basePower: 50,
+		accuracy: 100,
+		pp: 10,
+		shortDesc: "Hits twice.",
+		priority: 0,
+		flags: {protect: 1, mirror: 1, metronome: 1},
+		onPrepareHit(target, pokemon, move) {
+			this.attrLastMove('[still]');
+			this.add('-anim', pokemon, "Bonemerang", target);
+		},
+		multihit: 2,
+		secondary: null,
+		target: "normal",
+	},
+	teratriplebasedballbarrage: {
+		name: "Tera Triple Basedball Barrage",
+		type: "Stellar",
+		category: "Physical",
+		basePower: 1,
+		accuracy: true,
+		pp: 1,
+		shortDesc: "",
+		priority: 0,
+		flags: {},
+		onPrepareHit(target, pokemon, move) {
+			this.attrLastMove('[still]');
+			this.add('-anim', pokemon, "Astral Barrage", target);
+		},
+		isZ: "stellariumz",
+		secondary: null,
+		target: "normal",
+	},
+	
+	//slate 6
+	ironfist: {
+		name: "Iron Fist",
+		type: "Steel",
+		category: "Physical",
+		basePower: 90,
+		accuracy: 100,
+		pp: 10,
+		shortDesc: "Raises user's and target's Defense by 1.",
+		priority: 0,
+		flags: {protect: 1, mirror: 1, metronome: 1, punch: 1, contact: 1},
+		onPrepareHit(target, pokemon, move) {
+			this.attrLastMove('[still]');
+			this.add('-anim', pokemon, "Double Iron Bash", target);
+		},
+		boosts: {
+			def: 1,
+		},
+		self: {
+			boosts: {
+				def: 1,
+			},
+		},
+		secondary: null,
+		target: "normal",
+	},
+	fertilesoil: {
+		accuracy: true,
+		basePower: 0,
+		category: "Status",
+		name: "Fertile Soil",
+		shortDesc: "Inflicts foes with Leech seed on switchin. Single use.",
+		pp: 20,
+		priority: 0,
+		flags: {reflectable: 1, nonsky: 1, metronome: 1, mustpressure: 1},
+		sideCondition: 'fertilesoil',
+		condition: {
+			// this is a side condition
+			onSideStart(side) {
+				this.add('-sidestart', side, 'Fertile Soil');
+			},
+			onEntryHazard(pokemon) {
+				if(!pokemon.hasType('Grass')) {
+					if(pokemon.adjacentFoes().length == 0) return;
+					const target = this.sample(pokemon.adjacentFoes());
+					pokemon.addVolatile('leechseed', target);
+					pokemon.side.removeSideCondition('fertilesoil');
+					this.add('-sideend', pokemon.side, 'move: Fertile Soil', '[of] ' + pokemon);
+				}
+			},
+		},
+		secondary: null,
+		target: "foeSide",
+		type: "Grass",
+		zMove: {boost: {def: 1}},
+		contestType: "Clever",
+	},
+	epicbeam: {
+		name: "Epic Beam",
+		type: "Ice",
+		category: "Status",
+		basePower: 0,
+		accuracy: true,
+		pp: 40,
+		shortDesc: "Epic Beam",
+		priority: 0,
+		flags: {protect: 1, mirror: 1, metronome: 1},
+		onTry(source) {
+			if (source.side.pokemonLeft > 1) return;
+			this.attrLastMove('[still]');
+			this.add('-fail', source, 'move: Epic Beam');
+			return null;
+		},
+		onPrepareHit(target, pokemon, move) {
+			this.attrLastMove('[still]');
+			this.add('-anim', pokemon, "Prismatic Laser", target);
+		},
+		onModifyMove(move, pokemon, target) {
+			move.category = 'Special';
+			move.basePower = 300;
+		},
+		onAfterHit(target, source) {
+			source.side.addSlotCondition(source, 'epicbeam');
+		},
+		// wtf
+		selfSwitch: true,
+		condition: {
+			duration: 1,
+			// sacrificing implemented in side.ts, kind of
+		},
+		secondary: null,
+		target: "normal",
+	},
+	homerun: {
+		name: "Home Run",
+		type: "Silly",
+		category: "Physical",
+		basePower: 40,
+		accuracy: 100,
+		pp: 15,
+		shortDesc: "Usually goes first. 2x power if target is Baseballed.",
+		priority: 1,
+		flags: {protect: 1, mirror: 1, metronome: 1},
+		onPrepareHit(target, pokemon, move) {
+			this.attrLastMove('[still]');
+			this.add('-anim', pokemon, "Brutal Swing", target);
+		},
+		onBasePower(basePower, pokemon, target) {
+			if(target.status === 'baseball') return this.chainModify(2);
+		},
+		secondary: null,
+		target: "normal",
+	},
+	chaospotion: {
+		name: "Chaos Potion",
+		type: "Psychic",
+		category: "Status",
+		basePower: 0,
+		accuracy: true,
+		pp: 10,
+		shortDesc: "Turns the user into a random Pokemon.",
+		priority: 2,
+		flags: {snatch: 1, metronome: 1},
+		onPrepareHit(target, pokemon, move) {
+			this.attrLastMove('[still]');
+			this.add('-anim', pokemon, "Transform", target);
+		},
+		onHit(pokemon) {
+			if (!pokemon.hp) return;
+            const pokemons = this.dex.species.all();
+			const randomPokemon = this.sample(pokemons);
+            pokemon.formeChange(randomPokemon);
+			this.add('-message', `${pokemon.name} transformed into ${randomPokemon}!`);
+		},
+		secondary: null,
+		target: "self",
+	},
+	justicepotion: {
+		name: "Justice Potion",
+		type: "Psychic",
+		category: "Status",
+		basePower: 0,
+		accuracy: true,
+		pp: 10,
+		shortDesc: "Turns the target into a random Pokemon.",
+		priority: -2,
+		flags: {protect: 1, mirror: 1, reflectable: 1, metronome: 1},
+		onPrepareHit(target, pokemon, move) {
+			this.attrLastMove('[still]');
+			this.add('-anim', pokemon, "Acid Spray", target);
+		},
+		onHit(pokemon) {
+			if (!pokemon.hp) return;
+            const pokemons = this.dex.species.all();
+            const randomPokemon = this.sample(pokemons);
+            pokemon.formeChange(randomPokemon);
+			this.add('-message', `${pokemon.name} transformed into ${randomPokemon}!`);
+		},
+		secondary: null,
+		target: "normal",
+	},
+	graveyard: {
+		name: "Graveyard",
+		type: "Ghost",
+		category: "Status",
+		basePower: 0,
+		accuracy: true,
+		pp: 5,
+		shortDesc: "For 5 turns, +Ghost and damages non-Ghost/Darks.",
+		priority: 0,
+		flags: {metronome: 1},
+		onPrepareHit(target, pokemon, move) {
+			this.attrLastMove('[still]');
+			this.add('-anim', pokemon, "Sunny Day", target);
+		},
+		weather: 'graveyard',
+		secondary: null,
+		target: "all",
+	},
+	pieblast: {
+		name: "Pie Blast",
+		type: "Silly",
+		category: "Special",
+		basePower: 80,
+		accuracy: 100,
+		pp: 15,
+		shortDesc: "100% chance to lower the target's Speed by 1.",
+		priority: 0,
+		flags: {protect: 1, mirror: 1, metronome: 1},
+		onPrepareHit(target, pokemon, move) {
+			this.attrLastMove('[still]');
+			this.add('-anim', pokemon, "Mind Blown", target);
+		},
+		secondary: {
+			chance: 100,
+			boosts: {
+				spe: -1,
+			},
+		},
+		target: "normal",
+	},
+	multiattack: {
+		inherit: true,
+		shortDesc: "Type = Memory. Special if user's Sp. Atk > Atk.",
+		onModifyMove(move, pokemon) {
+			if (pokemon.getStat('atk', false, true) < pokemon.getStat('spa', false, true)) move.category = 'Special';
+		},
+	},
+	citrusbomb: {
+		accuracy: 85,
+		basePower: 60,
+		category: "Special",
+		name: "Citrus Bomb",
+		shortDesc: "Target's accuracy is lowered by 1 stage for 3 turns.",
+		pp: 10,
+		priority: 0,
+		flags: {protect: 1, mirror: 1, metronome: 1, bullet: 1},
+		condition: {
+			noCopy: true,
+			duration: 4,
+			onStart(pokemon) {
+				this.add('-start', pokemon, 'Citrus Bomb');
+			},
+			onUpdate(pokemon) {
+				if (this.effectState.source && !this.effectState.source.isActive) {
+					pokemon.removeVolatile('citrusbomb');
+				}
+			},
+			onResidualOrder: 14,
+			onResidual(pokemon) {
+				this.boost({accuracy: -1}, pokemon, this.effectState.source);
+			},
+			onEnd(pokemon) {
+				this.add('-end', pokemon, 'Citrus Bomb', '[silent]');
+			},
+		},
+		secondary: {
+			chance: 100,
+			volatileStatus: 'citrusbomb',
+		},
+		target: "normal",
+		type: "Lemon",
+	},
+	
+	//slate 7
+	clash: {
+		name: "Clash",
+		type: "Fighting",
+		category: "Physical",
+		basePower: 100,
+		accuracy: 100,
+		pp: 10,
+		shortDesc: "Fails if this Pokemon has a Status move.",
+		priority: 0,
+		flags: {protect: 1, mirror: 1, metronome: 1},
+		onPrepareHit(target, pokemon, move) {
+			this.attrLastMove('[still]');
+			this.add('-anim', pokemon, "First Impression", target);
+		},
+		onTry(pokemon) {
+			for (const moveSlot of pokemon.moveSlots) {
+                const temp = this.dex.moves.get(moveSlot.id);
+                if (temp.category === 'Status') return false;
+            }
+		},
+		secondary: null,
+		target: "normal",
+	},
+	anofferyoucantrefuse: {
+		name: "An Offer You Can\'t Refuse",
+		type: "Bug",
+		category: "Physical",
+		basePower: 90,
+		accuracy: 100,
+		pp: 10,
+		shortDesc: "User sets a Madness Counter on its side.",
+		priority: 0,
+		flags: {protect: 1, mirror: 1, metronome: 1},
+		onPrepareHit(target, pokemon, move) {
+			this.attrLastMove('[still]');
+			this.add('-anim', pokemon, "Pay Day", target);
+		},
+		onAfterHit(target, source) {
+			source.side.addSideCondition('madnesscounter');
+		},
+		secondary: null,
+		target: "normal",
+	},
+	lemonbash: {
+		name: "Lemon Bash",
+		type: "Lemon",
+		category: "Physical",
+		basePower: 80,
+		accuracy: 100,
+		pp: 15,
+		shortDesc: "No additional effect.",
+		priority: 0,
+		flags: {protect: 1, mirror: 1, metronome: 1, contact: 1,},
+		onPrepareHit(target, pokemon, move) {
+			this.attrLastMove('[still]');
+			this.add('-anim', pokemon, "Double-Edge", target);
+		},
+		secondary: null,
+		target: "normal",
+	},
+	springyfist: {
+		accuracy: 100,
+		basePower: 30,
+		category: "Physical",
+		name: "Springy Fist",
+		shortDesc: "User switches out. Disables the target's last move.",
+		pp: 15,
+		priority: 1,
+		flags: {contact: 1, punch: 1, protect: 1, mirror: 1, metronome: 1},
+		onPrepareHit(target, pokemon, move) {
+			this.attrLastMove('[still]');
+			this.add('-anim', pokemon, "Dizzy Punch", target);
+		},
+		onAfterHit(target, source) {
+			if (!target.lastMove || target.lastMove.isZ || target.lastMove.isMax || target.lastMove.id === 'struggle') return;
+			target.addVolatile('disable');
+		},
+		selfSwitch: true,
+		secondary: null,
+		target: "normal",
+		type: "Psychic",
+	},
+	focusblast: {
+		inherit: true,
+		accuracy: 80,
+	},
+	recycle: {
+		inherit: true,
+		shortDesc: "Restores the items the user's party last used.",
+		onHit(target, source) {
+			let success = false;
+			const allies = [...target.side.pokemon, ...target.side.allySide?.pokemon || []];
+			for (const ally of allies) {
+				if (ally.item || !ally.lastItem) continue;
+				const item = ally.lastItem;
+				ally.lastItem = '';
+				this.add('-item', ally, this.dex.items.get(item), '[from] move: Recycle');
+				ally.setItem(item);
+				success = true;
+			}
+			return success;
+		},
 	},
 	
 	//Silly shit
@@ -2320,6 +2908,125 @@ export const Moves: {[moveid: string]: ModdedMoveData} = {
 		type: "Silly",
 	},
 
+	//disaster shit
+	rockslide: {
+		inherit: true,
+		flags: {protect: 1, mirror: 1, metronome: 1, disaster: 1},
+	},
+	earthquake: {
+		inherit: true,
+		flags: {protect: 1, mirror: 1, nonsky: 1, metronome: 1, disaster: 1},
+	},
+	magnitude: {
+		inherit: true,
+		flags: {protect: 1, mirror: 1, nonsky: 1, metronome: 1, disaster: 1},
+	},
+	muddywater: {
+		inherit: true,
+		flags: {protect: 1, mirror: 1, nonsky: 1, metronome: 1, disaster: 1},
+	},
+	surf: {
+		inherit: true,
+		flags: {protect: 1, mirror: 1, nonsky: 1, metronome: 1, disaster: 1},
+	},
+	hurricane: {
+		inherit: true,
+		flags: {protect: 1, mirror: 1, distance: 1, wind: 1, metronome: 1, disaster: 1},
+		onModifyMove(move, pokemon, target) {
+			switch (target?.effectiveWeather()) {
+			case 'raindance':
+			case 'primordialsea':
+				move.accuracy = true;
+				break;
+			case 'sunnyday':
+			case 'desolateland':
+			case 'acidrain':
+				move.accuracy = 50;
+				break;
+			}
+		},
+	},
+	thunder: {
+		inherit: true,
+		flags: {protect: 1, mirror: 1, metronome: 1, disaster: 1},
+		onModifyMove(move, pokemon, target) {
+			switch (target?.effectiveWeather()) {
+			case 'raindance':
+			case 'primordialsea':
+				move.accuracy = true;
+				break;
+			case 'sunnyday':
+			case 'desolateland':
+			case 'acidrain':
+				move.accuracy = 50;
+				break;
+			}
+		},
+	},
+	blizzard: {
+		inherit: true,
+		flags: {protect: 1, mirror: 1, wind: 1, metronome: 1, disaster: 1},
+		onModifyMove(move, pokemon, target) {
+			switch (target?.effectiveWeather()) {
+			case 'hail':
+			case 'snow':
+				move.accuracy = true;
+				break;
+			case 'acidrain':
+				move.accuracy = 50;
+				break;
+			}
+		},
+	},
+	dracometeor: {
+		inherit: true,
+		flags: {protect: 1, mirror: 1, metronome: 1, disaster: 1},
+	},
+	heatwave: {
+		inherit: true,
+		flags: {protect: 1, mirror: 1, wind: 1, metronome: 1, disaster: 1},
+	},
+	inferno: {
+		inherit: true,
+		flags: {protect: 1, mirror: 1, metronome: 1, disaster: 1},
+	},
+	eruption: {
+		inherit: true,
+		flags: {protect: 1, mirror: 1, metronome: 1, disaster: 1},
+	},
+	avalanche: {
+		inherit: true,
+		flags: {protect: 1, mirror: 1, contact: 1, metronome: 1, disaster: 1},
+	},
+	whirlwind: {
+		inherit: true,
+		flags: {reflectable: 1, mirror: 1, bypasssub: 1, allyanim: 1, metronome: 1, noassist: 1, failcopycat: 1, wind: 1, disaster: 1},
+	},
+	bleakwindstorm: {
+		inherit: true,
+		flags: {protect: 1, mirror: 1, wind: 1, metronome: 1, disaster: 1},
+	},
+	sandsearstorm: {
+		inherit: true,
+		flags: {protect: 1, mirror: 1, wind: 1, metronome: 1, disaster: 1},
+	},
+	wildboltstorm: {
+		inherit: true,
+		flags: {protect: 1, mirror: 1, wind: 1, metronome: 1, disaster: 1},
+	},
+	lavaplume: {
+		inherit: true,
+		flags: {protect: 1, mirror: 1, metronome: 1, disaster: 1},
+	},
+	twister: {
+		inherit: true,
+		flags: {protect: 1, mirror: 1, wind: 1, metronome: 1, disaster: 1},
+	},
+	magmastorm: {
+		inherit: true,
+		flags: {protect: 1, mirror: 1, metronome: 1, disaster: 1},
+	},
+	
 	//fake moves
 	abomacarespikes: {
 		accuracy: true,
@@ -2347,6 +3054,35 @@ export const Moves: {[moveid: string]: ModdedMoveData} = {
 		zMove: {boost: {def: 1}},
 		contestType: "Clever",
 	},
+	madnesscounter: {
+		accuracy: true,
+		basePower: 0,
+		category: "Status",
+		name: "Madness Counter",
+		pp: 20,
+		priority: 0,
+		flags: {reflectable: 1, nonsky: 1, metronome: 1, mustpressure: 1, nosketch: 1},
+		sideCondition: 'madnesscounter',
+		condition: {
+			// this is a side condition
+			onSideStart(side) {
+				this.add('-sidestart', side, 'Madness Counter');
+			},
+			onEntryHazard(pokemon) {
+				if (pokemon.baseSpecies.diamondHand) {
+					const bestStat = pokemon.getBestStat(true, true);
+					this.boost({[bestStat]: 1}, pokemon);
+					pokemon.side.removeSideCondition('madnesscounter');
+					this.add('-sideend', pokemon.side, 'move: Madness Counter', '[of] ' + pokemon);
+				}
+			},
+		},
+		secondary: null,
+		target: "allySide",
+		type: "Psychic",
+		zMove: {boost: {def: 1}},
+		contestType: "Clever",
+	},
 	clownnose: {
 		accuracy: true,
 		basePower: 0,
@@ -2365,6 +3101,74 @@ export const Moves: {[moveid: string]: ModdedMoveData} = {
 		secondary: null,
 		target: "normal",
 		type: "Silly",
+	},
+	fish: {
+		name: "Fish",
+		type: "Water",
+		category: "Status",
+		basePower: 0,
+		accuracy: true,
+		pp: 1,
+		shortDesc: "Designates Fish Pokemon",
+		priority: 0,
+		flags: {},
+		onPrepareHit(target, pokemon, move) {
+			this.attrLastMove('[still]');
+			this.add('-anim', pokemon, "", target);
+		},
+		secondary: null,
+		target: "normal",
+	},
+	diamondhand: {
+		name: "Diamond Hand",
+		type: "Normal",
+		category: "Status",
+		basePower: 0,
+		accuracy: true,
+		pp: 1,
+		shortDesc: "Designates Diamond Hand Pokemon",
+		priority: 0,
+		flags: {},
+		onPrepareHit(target, pokemon, move) {
+			this.attrLastMove('[still]');
+			this.add('-anim', pokemon, "", target);
+		},
+		secondary: null,
+		target: "normal",
+	},
+	hoenn: {
+		name: "Hoenn",
+		type: "Dragon",
+		category: "Status",
+		basePower: 0,
+		accuracy: true,
+		pp: 1,
+		shortDesc: "Designates Hoenn Pokemon",
+		priority: 0,
+		flags: {},
+		onPrepareHit(target, pokemon, move) {
+			this.attrLastMove('[still]');
+			this.add('-anim', pokemon, "", target);
+		},
+		secondary: null,
+		target: "normal",
+	},
+	trans: {
+		name: "Trans",
+		type: "Normal",
+		category: "Status",
+		basePower: 0,
+		accuracy: true,
+		pp: 1,
+		shortDesc: "Designates Trans Pokemon",
+		priority: 0,
+		flags: {},
+		onPrepareHit(target, pokemon, move) {
+			this.attrLastMove('[still]');
+			this.add('-anim', pokemon, "", target);
+		},
+		secondary: null,
+		target: "normal",
 	},
 
 	//vanilla moves
@@ -2484,4 +3288,205 @@ export const Moves: {[moveid: string]: ModdedMoveData} = {
 		isNonstandard: null,
 	},
 	gmaxcuddle: null,
-}
+	trumpcard: {
+		inherit: true,
+		onPrepareHit(pokemon) {
+			pokemon.usedTrumpCard = true;
+		},
+	},
+	weatherball: {
+		inherit: true,
+		onModifyType(move, pokemon) {
+			switch (pokemon.effectiveWeather()) {
+			case 'sunnyday':
+			case 'desolateland':
+				move.type = 'Fire';
+				break;
+			case 'raindance':
+			case 'primordialsea':
+				move.type = 'Water';
+				break;
+			case 'sandstorm':
+				move.type = 'Rock';
+				break;
+			case 'hail':
+			case 'snow':
+				move.type = 'Ice';
+				break;
+			case 'graveyard':
+				move.type = 'Ghost';
+				break;
+			case 'acidrain':
+				move.type = 'Lemon';
+				break;
+			}
+		},
+		onModifyMove(move, pokemon) {
+			switch (pokemon.effectiveWeather()) {
+			case 'sunnyday':
+			case 'desolateland':
+				move.basePower *= 2;
+				break;
+			case 'raindance':
+			case 'primordialsea':
+				move.basePower *= 2;
+				break;
+			case 'sandstorm':
+				move.basePower *= 2;
+				break;
+			case 'hail':
+			case 'snow':
+				move.basePower *= 2;
+				break;
+			case 'graveyard':
+				move.basePower *= 2;
+				break;
+			case 'acidrain':
+				move.basePower *= 2;
+				break;
+			}
+			this.debug('BP: ' + move.basePower);
+		},
+	},
+	morningsun: {
+		inherit: true,
+		onHit(pokemon) {
+			let factor = 0.5;
+			switch (pokemon.effectiveWeather()) {
+			case 'sunnyday':
+			case 'desolateland':
+				factor = 0.667;
+				break;
+			case 'raindance':
+			case 'primordialsea':
+			case 'sandstorm':
+			case 'hail':
+			case 'snow':
+			case 'graveyard':
+			case 'acidrain':
+				factor = 0.25;
+				break;
+			}
+			const success = !!this.heal(this.modify(pokemon.maxhp, factor));
+			if (!success) {
+				this.add('-fail', pokemon, 'heal');
+				return this.NOT_FAIL;
+			}
+			return success;
+		},
+	},
+	synthesis: {
+		inherit: true,
+		onHit(pokemon) {
+			let factor = 0.5;
+			switch (pokemon.effectiveWeather()) {
+			case 'sunnyday':
+			case 'desolateland':
+				factor = 0.667;
+				break;
+			case 'raindance':
+			case 'primordialsea':
+			case 'sandstorm':
+			case 'hail':
+			case 'snow':
+			case 'graveyard':
+			case 'acidrain':
+				factor = 0.25;
+				break;
+			}
+			const success = !!this.heal(this.modify(pokemon.maxhp, factor));
+			if (!success) {
+				this.add('-fail', pokemon, 'heal');
+				return this.NOT_FAIL;
+			}
+			return success;
+		},
+	},
+	moonlight: {
+		inherit: true,
+		onHit(pokemon) {
+			let factor = 0.5;
+			switch (pokemon.effectiveWeather()) {
+			case 'sunnyday':
+			case 'desolateland':
+			case 'graveyard':
+				factor = 0.667;
+				break;
+			case 'raindance':
+			case 'primordialsea':
+			case 'sandstorm':
+			case 'hail':
+			case 'snow':
+			case 'acidrain':
+				factor = 0.25;
+				break;
+			}
+			const success = !!this.heal(this.modify(pokemon.maxhp, factor));
+			if (!success) {
+				this.add('-fail', pokemon, 'heal');
+				return this.NOT_FAIL;
+			}
+			return success;
+		},
+	},
+	stockpile: {
+		inherit: true,
+		condition: {
+			noCopy: true,
+			onStart(target, source, effect) {
+				this.effectState.layers = 1;
+				this.effectState.def = 0;
+				this.effectState.spd = 0;
+				this.add('-start', target, 'stockpile' + this.effectState.layers);
+				if (effect.id === 'fisheater') return;
+				const [curDef, curSpD] = [target.boosts.def, target.boosts.spd];
+				this.boost({def: 1, spd: 1}, target, target);
+				if (curDef !== target.boosts.def) this.effectState.def--;
+				if (curSpD !== target.boosts.spd) this.effectState.spd--;
+			},
+			onRestart(target, source, effect) {
+				if (this.effectState.layers >= 3) return false;
+				this.effectState.layers++;
+				this.add('-start', target, 'stockpile' + this.effectState.layers);
+				if (effect.id === 'fisheater') return;
+				const curDef = target.boosts.def;
+				const curSpD = target.boosts.spd;
+				this.boost({def: 1, spd: 1}, target, target);
+				if (curDef !== target.boosts.def) this.effectState.def--;
+				if (curSpD !== target.boosts.spd) this.effectState.spd--;
+			},
+			onEnd(target) {
+				if (this.effectState.def || this.effectState.spd) {
+					const boosts: SparseBoostsTable = {};
+					if (this.effectState.def) boosts.def = this.effectState.def;
+					if (this.effectState.spd) boosts.spd = this.effectState.spd;
+					this.boost(boosts, target, target);
+				}
+				this.add('-end', target, 'Stockpile');
+				if (this.effectState.def !== this.effectState.layers * -1 || this.effectState.spd !== this.effectState.layers * -1) {
+					this.hint("In Gen 7, Stockpile keeps track of how many times it successfully altered each stat individually.");
+				}
+			},
+		},
+	},
+	solarbeam: {
+		inherit: true,
+		onBasePower(basePower, pokemon, target) {
+			const weakWeathers = ['raindance', 'primordialsea', 'sandstorm', 'hail', 'snow', 'acidrain'];
+			if (weakWeathers.includes(pokemon.effectiveWeather())) {
+				this.debug('weakened by weather');
+				return this.chainModify(0.5);
+			}
+		},
+	},
+	solarblade: {
+		inherit: true,
+		onBasePower(basePower, pokemon, target) {
+			const weakWeathers = ['raindance', 'primordialsea', 'sandstorm', 'hail', 'snow', 'acidrain'];
+			if (weakWeathers.includes(pokemon.effectiveWeather())) {
+				this.debug('weakened by weather');
+				return this.chainModify(0.5);
+			}
+		},
+	},
+};
